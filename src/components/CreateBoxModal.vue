@@ -89,9 +89,12 @@ function handleKeydown(event: KeyboardEvent) {
 </template>
 
 <style scoped>
-.fade-enter-active,
+.fade-enter-active {
+  transition: opacity 0.25s ease-out;
+}
+
 .fade-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease-in;
 }
 
 .fade-enter-from,
@@ -99,11 +102,16 @@ function handleKeydown(event: KeyboardEvent) {
   opacity: 0;
 }
 
-.scale-enter-active,
+.scale-enter-active {
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 .scale-leave-active {
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+    opacity 0.2s ease-in,
+    transform 0.2s cubic-bezier(0.32, 0, 0.67, 0);
 }
 
 .scale-enter-from,

@@ -66,9 +66,12 @@ function handleBackdropClick() {
 </template>
 
 <style scoped>
-.fade-enter-active,
+.fade-enter-active {
+  transition: opacity 0.25s ease-out;
+}
+
 .fade-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease-in;
 }
 
 .fade-enter-from,
@@ -76,9 +79,12 @@ function handleBackdropClick() {
   opacity: 0;
 }
 
-.slide-up-enter-active,
+.slide-up-enter-active {
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 .slide-up-leave-active {
-  transition: transform 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.32, 0, 0.67, 0);
 }
 
 .slide-up-enter-from,
