@@ -1,0 +1,1 @@
+while true; do cat prompt.md | claude -p --dangerously-skip-permissions; done
