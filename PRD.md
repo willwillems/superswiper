@@ -282,7 +282,7 @@
 
 ### Animation Refinements
 
-- [ ] Button press feedback (scale)
+- [x] Button press feedback (scale)
 - [ ] Page transition animations
 - [ ] Sheet open/close smoothness
 - [ ] Card stack visual depth

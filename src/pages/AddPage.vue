@@ -67,7 +67,7 @@ function triggerUpload() {
     <div class="flex gap-2">
       <button
         :class="[
-          'flex-1 rounded-xl py-3 text-sm font-medium transition-colors',
+          'flex-1 rounded-xl py-3 text-sm font-medium transition-all active:scale-95',
           mode === 'camera'
             ? 'bg-accent text-white'
             : 'bg-surface text-text-muted',
@@ -78,7 +78,7 @@ function triggerUpload() {
       </button>
       <button
         :class="[
-          'flex-1 rounded-xl py-3 text-sm font-medium transition-colors',
+          'flex-1 rounded-xl py-3 text-sm font-medium transition-all active:scale-95',
           mode === 'upload'
             ? 'bg-accent text-white'
             : 'bg-surface text-text-muted',

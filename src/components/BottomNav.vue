@@ -28,7 +28,7 @@ function navigate(name: string) {
     <button
       v-for="tab in tabs"
       :key="tab.name"
-      class="flex flex-1 flex-col items-center gap-1 pb-2 pt-3 transition-colors"
+      class="flex flex-1 flex-col items-center gap-1 pb-2 pt-3 transition-all active:scale-95"
       :class="activeTab === tab.name ? 'text-accent' : 'text-text-muted'"
       @click="navigate(tab.name)"
     >

@@ -70,14 +70,14 @@ function handleKeydown(event: KeyboardEvent) {
 
         <div class="flex gap-3">
           <button
-            class="flex-1 rounded-xl bg-background px-4 py-3 font-medium text-text-muted transition-colors hover:bg-background/80"
+            class="flex-1 rounded-xl bg-background px-4 py-3 font-medium text-text-muted transition-all hover:bg-background/80 active:scale-95"
             @click="handleBackdropClick"
           >
             Cancel
           </button>
           <button
             :disabled="!boxName.trim()"
-            class="flex-1 rounded-xl bg-accent px-4 py-3 font-medium text-white transition-colors hover:bg-accent-light disabled:opacity-50"
+            class="flex-1 rounded-xl bg-accent px-4 py-3 font-medium text-white transition-all hover:bg-accent-light active:scale-95 disabled:opacity-50"
             @click="handleSubmit"
           >
             Create

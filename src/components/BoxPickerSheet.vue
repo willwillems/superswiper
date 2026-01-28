@@ -73,7 +73,7 @@ function getGradientClass(gradient: number): string {
           </button>
 
           <button
-            class="flex h-24 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-text-muted/30 text-text-muted transition-colors hover:border-accent hover:text-accent"
+            class="flex h-24 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-text-muted/30 text-text-muted transition-all hover:border-accent hover:text-accent active:scale-95"
             @click="handleCreateNew"
           >
             <span class="text-2xl">+</span>
