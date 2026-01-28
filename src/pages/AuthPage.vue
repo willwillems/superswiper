@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
-const { sendMagicCode, verifyMagicCode, error } = useAuth()
+const { sendMagicCode, verifyMagicCode, signInAsGuest, error } = useAuth()
 
 const step = ref<'email' | 'code'>('email')
 const email = ref('')
@@ -41,6 +41,18 @@ function handleBack() {
   step.value = 'email'
   code.value = ''
 }
+
+async function handleGuestSignIn() {
+  isSubmitting.value = true
+  try {
+    await signInAsGuest()
+    router.replace({ name: 'swipe' })
+  } catch {
+    // error is set by useAuth
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
 
 <template>
@@ -69,6 +81,21 @@ function handleBack() {
         class="w-full rounded-xl bg-accent px-4 py-3 font-semibold text-white transition-transform active:scale-95 disabled:opacity-50"
       >
         {{ isSubmitting ? 'Sending...' : 'Send Magic Code' }}
+      </button>
+
+      <div class="flex items-center gap-3">
+        <div class="h-px flex-1 bg-white/10" />
+        <span class="text-sm text-text-muted">or</span>
+        <div class="h-px flex-1 bg-white/10" />
+      </div>
+
+      <button
+        type="button"
+        :disabled="isSubmitting"
+        class="w-full rounded-xl border border-white/20 px-4 py-3 font-semibold text-text-primary transition-transform active:scale-95 disabled:opacity-50"
+        @click="handleGuestSignIn"
+      >
+        Continue as Guest
       </button>
     </form>
 

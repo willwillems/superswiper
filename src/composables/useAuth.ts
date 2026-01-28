@@ -22,6 +22,7 @@ db.subscribeAuth((authResult) => {
 export function useAuth() {
   const isLoading = computed(() => authState.value === 'loading')
   const isAuthenticated = computed(() => authState.value === 'authenticated')
+  const isGuest = computed(() => isAuthenticated.value && !user.value?.email)
 
   async function sendMagicCode(email: string) {
     error.value = null
@@ -39,6 +40,16 @@ export function useAuth() {
       await db.auth.signInWithMagicCode({ email, code })
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'Invalid code'
+      throw e
+    }
+  }
+
+  async function signInAsGuest() {
+    error.value = null
+    try {
+      await db.auth.signInAsGuest()
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Failed to sign in as guest'
       throw e
     }
   }
@@ -77,9 +88,11 @@ export function useAuth() {
     error,
     isLoading,
     isAuthenticated,
+    isGuest,
     authState,
     sendMagicCode,
     verifyMagicCode,
+    signInAsGuest,
     logout,
     waitForAuth,
   }
