@@ -290,9 +290,9 @@
 ### Edge Cases
 
 - [x] Handle very long item/box names
-- [ ] Handle missing/broken images
+- [x] Handle missing/broken images
 - [x] Handle rapid successive swipes
-- [ ] Handle offline state (InstantDB handles this)
+- [x] Handle offline state (InstantDB handles this)
 
 ---
 
@@ -318,7 +318,7 @@
 
 ## Technical Debt & Maintenance
 
-- [ ] Add unit tests for composables
+- [x] Add unit tests for composables
 - [ ] Add component tests for critical flows
 - [ ] Set up error monitoring (Sentry or similar)
 - [ ] Performance audit (bundle size, render performance)
