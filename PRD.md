@@ -4,56 +4,56 @@
 
 ### Schema & Database
 
-- [ ] Define `items` entity (name, photoPath, status, createdAt, sortedAt)
-- [ ] Define `boxes` entity (name, gradient, createdAt)
-- [ ] Add `itemsSorted` field to $users
-- [ ] Create `itemOwner` link (items → $users)
-- [ ] Create `boxOwner` link (boxes → $users)
-- [ ] Create `itemBox` link (items → boxes)
-- [ ] Push schema to InstantDB
+- [x] Define `items` entity (name, photoPath, status, createdAt, sortedAt)
+- [x] Define `boxes` entity (name, gradient, createdAt)
+- [x] Add `itemsSorted` field to $users
+- [x] Create `itemOwner` link (items → $users)
+- [x] Create `boxOwner` link (boxes → $users)
+- [x] Create `itemBox` link (items → boxes)
+- [x] Push schema to InstantDB
 
 ### Permissions
 
-- [ ] Items: users can only CRUD their own items
-- [ ] Boxes: users can only CRUD their own boxes
-- [ ] $users: users can view/update their own record
-- [ ] $files: users can upload and view their own files
-- [ ] Push permissions to InstantDB
+- [x] Items: users can only CRUD their own items
+- [x] Boxes: users can only CRUD their own boxes
+- [x] $users: users can view/update their own record
+- [x] $files: users can upload and view their own files
+- [x] Push permissions to InstantDB
 
 ### Authentication
 
-- [ ] Create `useAuth` composable wrapping InstantDB auth
-- [ ] Create `AuthPage.vue` with email input step
-- [ ] Add code verification step to AuthPage
-- [ ] Handle auth errors with user feedback
-- [ ] Redirect to home after successful auth
+- [x] Create `useAuth` composable wrapping InstantDB auth
+- [x] Create `AuthPage.vue` with email input step
+- [x] Add code verification step to AuthPage
+- [x] Handle auth errors with user feedback
+- [x] Redirect to home after successful auth
 
 ### App Shell & Navigation
 
-- [ ] Create `AppShell.vue` layout component
-- [ ] Create `BottomNav.vue` with 3 tabs (Swipe, Add, Items)
-- [ ] Style bottom nav with active states
-- [ ] Add safe area padding for mobile notches
-- [ ] Add settings menu with logout action
+- [x] Create `AppShell.vue` layout component
+- [x] Create `BottomNav.vue` with 3 tabs (Swipe, Add, Items)
+- [x] Style bottom nav with active states
+- [x] Add safe area padding for mobile notches
+- [x] Add settings menu with logout action
 
 ### Routing
 
-- [ ] Configure `/auth` route (AuthPage)
-- [ ] Configure `/` route (SwipePage)
-- [ ] Configure `/add` route (AddPage)
-- [ ] Configure `/items` route (ItemsPage)
-- [ ] Configure `/items/box/:boxId` route (ItemsDetailPage)
-- [ ] Configure `/items/category/:category` route (ItemsDetailPage)
-- [ ] Add auth guard to protected routes
-- [ ] Hide bottom nav on auth page
+- [x] Configure `/auth` route (AuthPage)
+- [x] Configure `/` route (SwipePage)
+- [x] Configure `/add` route (AddPage)
+- [x] Configure `/items` route (ItemsPage)
+- [x] Configure `/items/box/:boxId` route (ItemsDetailPage)
+- [x] Configure `/items/category/:category` route (ItemsDetailPage)
+- [x] Add auth guard to protected routes
+- [x] Hide bottom nav on auth page
 
 ### Base Styling
 
-- [ ] Set up color variables in Tailwind config
-- [ ] Configure dark theme as default
-- [ ] Set up base typography
-- [ ] Create 8 preset box gradient classes
-- [ ] Create gradient utility classes for UI elements
+- [x] Set up color variables in Tailwind config
+- [x] Configure dark theme as default
+- [x] Set up base typography
+- [x] Create 8 preset box gradient classes
+- [x] Create gradient utility classes for UI elements
 
 ---
 
@@ -61,49 +61,49 @@
 
 ### Image Utilities
 
-- [ ] Create `useImageCompression` composable
-- [ ] Implement resize to max 1200px dimension
-- [ ] Implement JPEG compression at 80% quality
-- [ ] Handle EXIF orientation correction
+- [x] Create `useImageCompression` composable
+- [x] Implement resize to max 1200px dimension
+- [x] Implement JPEG compression at 80% quality
+- [x] Handle EXIF orientation correction
 
 ### Camera Capture
 
-- [ ] Create camera input component
-- [ ] Style large capture button
-- [ ] Trigger native camera on mobile
-- [ ] Compress image after capture
-- [ ] Show capture success feedback
+- [x] Create camera input component
+- [x] Style large capture button
+- [x] Trigger native camera on mobile
+- [x] Compress image after capture
+- [x] Show capture success feedback
 
 ### Batch Upload
 
-- [ ] Create file picker for multiple images
-- [ ] Show selected files preview
-- [ ] Process uploads sequentially
-- [ ] Show upload progress indicator
-- [ ] Handle upload errors gracefully
+- [x] Create file picker for multiple images
+- [x] Show selected files preview
+- [x] Process uploads sequentially
+- [x] Show upload progress indicator
+- [x] Handle upload errors gracefully
 
 ### InstantDB Storage Integration
 
-- [ ] Create `useUpload` composable
-- [ ] Upload compressed image to InstantDB storage
-- [ ] Get file URL after upload
-- [ ] Create item record linked to file
+- [x] Create `useUpload` composable
+- [x] Upload compressed image to InstantDB storage
+- [x] Get file URL after upload
+- [x] Create item record linked to file
 
 ### Item Creation
 
-- [ ] Create `useItems` composable
-- [ ] Implement `createItem` transaction
-- [ ] Set default name to "Item" (no numbering)
-- [ ] Set status to "unsorted"
-- [ ] Set createdAt timestamp
-- [ ] Link item to current user
+- [x] Create `useItems` composable
+- [x] Implement `createItem` transaction
+- [x] Set default name to "Item" (no numbering)
+- [x] Set status to "unsorted"
+- [x] Set createdAt timestamp
+- [x] Link item to current user
 
 ### Add Page UI
 
-- [ ] Create `AddPage.vue`
-- [ ] Toggle between camera and upload modes
-- [ ] Show recently added items count
-- [ ] Stay on page after adding (ready for more)
+- [x] Create `AddPage.vue`
+- [x] Toggle between camera and upload modes
+- [x] Show recently added items count
+- [x] Stay on page after adding (ready for more)
 
 ---
 
@@ -111,81 +111,81 @@
 
 ### Swipe Gesture
 
-- [ ] Create `useSwipe` composable
-- [ ] Track pointer/touch down position
-- [ ] Calculate drag delta on move
-- [ ] Apply transform (translate + rotate)
-- [ ] Detect left/right threshold (100px)
-- [ ] Spring back animation when below threshold
+- [x] Create `useSwipe` composable
+- [x] Track pointer/touch down position
+- [x] Calculate drag delta on move
+- [x] Apply transform (translate + rotate)
+- [x] Detect left/right threshold (100px)
+- [x] Spring back animation when below threshold
 
 ### Swipe Card
 
-- [ ] Create `SwipeCard.vue` component
-- [ ] Display item photo (full bleed)
-- [ ] Overlay item name at bottom
-- [ ] Gradient overlay for text legibility
-- [ ] Connect to swipe gesture composable
+- [x] Create `SwipeCard.vue` component
+- [x] Display item photo (full bleed)
+- [x] Overlay item name at bottom
+- [x] Gradient overlay for text legibility
+- [x] Connect to swipe gesture composable
 
 ### Swipe Animations
 
-- [ ] Fly-off animation (left)
-- [ ] Fly-off animation (right)
-- [ ] Card enter animation (scale + fade)
-- [ ] Next card peek behind current card
+- [x] Fly-off animation (left)
+- [x] Fly-off animation (right)
+- [x] Card enter animation (scale + fade)
+- [x] Next card peek behind current card
 
 ### Action Overlays
 
-- [ ] Create `SwipeOverlay.vue` component
-- [ ] Show "KEEP" indicator on right drag
-- [ ] Show "DISCARD" indicator on left drag
-- [ ] Animate opacity based on drag distance
-- [ ] Use appropriate colors (green/red)
+- [x] Create `SwipeOverlay.vue` component
+- [x] Show "KEEP" indicator on right drag
+- [x] Show "DISCARD" indicator on left drag
+- [x] Animate opacity based on drag distance
+- [x] Use appropriate colors (green/red)
 
 ### Discard Sheet
 
-- [ ] Create `DiscardSheet.vue` component
-- [ ] Slide-up animation from bottom
-- [ ] Backdrop blur effect
-- [ ] Three buttons: Trash, Donate, Sell
-- [ ] Icon + label for each option
-- [ ] Close on selection or tap outside
+- [x] Create `DiscardSheet.vue` component
+- [x] Slide-up animation from bottom
+- [x] Backdrop blur effect
+- [x] Three buttons: Trash, Donate, Sell
+- [x] Icon + label for each option
+- [x] Close on selection or tap outside
 
 ### Box Picker Sheet
 
-- [ ] Create `BoxPickerSheet.vue` component
-- [ ] 2-column grid of boxes
-- [ ] Sort boxes by item count (descending)
-- [ ] Show box name and item count
-- [ ] Display box's assigned gradient background
-- [ ] "Create new box" button at end
-- [ ] Close on selection
+- [x] Create `BoxPickerSheet.vue` component
+- [x] 2-column grid of boxes
+- [x] Sort boxes by item count (descending)
+- [x] Show box name and item count
+- [x] Display box's assigned gradient background
+- [x] "Create new box" button at end
+- [x] Close on selection
 
 ### Create Box Flow
 
-- [ ] Create `CreateBoxModal.vue` component
-- [ ] Text input for box name
-- [ ] Create button
-- [ ] Create `useBoxes` composable
-- [ ] Implement `createBox` transaction
-- [ ] Assign random gradient index (0-7) on creation
-- [ ] Box created immediately (can exist with 0 items)
-- [ ] Auto-select newly created box when in swipe flow
+- [x] Create `CreateBoxModal.vue` component
+- [x] Text input for box name
+- [x] Create button
+- [x] Create `useBoxes` composable
+- [x] Implement `createBox` transaction
+- [x] Assign random gradient index (0-7) on creation
+- [x] Box created immediately (can exist with 0 items)
+- [x] Auto-select newly created box when in swipe flow
 
 ### Sort Transactions
 
-- [ ] Implement `discardItem` (update status to trash/donate/sell)
-- [ ] Implement `keepItem` (update status to kept, link to box)
-- [ ] Set sortedAt timestamp on sort
-- [ ] Increment user's itemsSorted counter
+- [x] Implement `discardItem` (update status to trash/donate/sell)
+- [x] Implement `keepItem` (update status to kept, link to box)
+- [x] Set sortedAt timestamp on sort
+- [x] Increment user's itemsSorted counter
 
 ### Swipe Page
 
-- [ ] Create `SwipePage.vue`
-- [ ] Query unsorted items for user
-- [ ] Show current item in SwipeCard
-- [ ] Handle swipe completion → show appropriate sheet
-- [ ] Advance to next item after sort
-- [ ] Handle empty state (no unsorted items)
+- [x] Create `SwipePage.vue`
+- [x] Query unsorted items for user
+- [x] Show current item in SwipeCard
+- [x] Handle swipe completion → show appropriate sheet
+- [x] Advance to next item after sort
+- [x] Handle empty state (no unsorted items)
 
 ---
 
