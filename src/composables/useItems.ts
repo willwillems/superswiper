@@ -5,13 +5,14 @@ import { id } from '@instantdb/core'
 
 export type ItemStatus = 'unsorted' | 'kept' | 'trash' | 'donate' | 'sell'
 
-interface Item {
+export interface Item {
   id: string
   name: string
   photoPath: string
   status: string
   createdAt: number
   sortedAt?: number
+  box?: { id: string; name: string; gradient: number }
 }
 
 export function useItems() {
@@ -33,6 +34,7 @@ export function useItems() {
             where: { 'owner.id': userId },
             order: { serverCreatedAt: 'desc' },
           },
+          box: {},
         },
       },
       (resp) => {
@@ -70,6 +72,30 @@ export function useItems() {
   const unsortedItems = computed(() =>
     items.value.filter((item) => item.status === 'unsorted')
   )
+
+  const trashItems = computed(() =>
+    items.value.filter((item) => item.status === 'trash')
+  )
+
+  const donateItems = computed(() =>
+    items.value.filter((item) => item.status === 'donate')
+  )
+
+  const sellItems = computed(() =>
+    items.value.filter((item) => item.status === 'sell')
+  )
+
+  const keptItems = computed(() =>
+    items.value.filter((item) => item.status === 'kept')
+  )
+
+  function getItemsByStatus(status: ItemStatus) {
+    return items.value.filter((item) => item.status === status)
+  }
+
+  function getItemsByBoxId(boxId: string) {
+    return items.value.filter((item) => item.box?.id === boxId)
+  }
 
   async function createItem(photoPath: string, name = 'Item') {
     const userId = user.value?.id
@@ -137,13 +163,48 @@ export function useItems() {
     ])
   }
 
+  async function updateItemName(itemId: string, name: string) {
+    const userId = user.value?.id
+    if (!userId) throw new Error('Not authenticated')
+
+    await db.transact([db.tx.items![itemId]!.update({ name })])
+  }
+
+  async function moveItem(
+    itemId: string,
+    destination: { boxId: string } | { status: 'trash' | 'donate' | 'sell' }
+  ) {
+    const userId = user.value?.id
+    if (!userId) throw new Error('Not authenticated')
+
+    if ('boxId' in destination) {
+      await db.transact([
+        db.tx.items![itemId]!.update({ status: 'kept' }),
+        db.tx.items![itemId]!.link({ box: destination.boxId }),
+      ])
+    } else {
+      await db.transact([
+        db.tx.items![itemId]!.update({ status: destination.status }),
+        db.tx.items![itemId]!.unlink({ box: '' }),
+      ])
+    }
+  }
+
   return {
     items,
     unsortedItems,
+    trashItems,
+    donateItems,
+    sellItems,
+    keptItems,
+    getItemsByStatus,
+    getItemsByBoxId,
     isLoading,
     error,
     createItem,
     discardItem,
     keepItem,
+    updateItemName,
+    moveItem,
   }
 }

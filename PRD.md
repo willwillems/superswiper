@@ -193,40 +193,40 @@
 
 ### Items Overview Page
 
-- [ ] Create `ItemsPage.vue`
-- [ ] Header with "Items Sorted" counter
-- [ ] Boxes section with 2-column grid
-- [ ] Create `BoxCard.vue` component
-- [ ] Show box name, item count, assigned gradient bg
-- [ ] Query boxes with item counts
-- [ ] Discard categories section (full-width)
-- [ ] Trash button with count
-- [ ] Donate button with count
-- [ ] Sell button with count
-- [ ] Navigate to detail on tap
+- [x] Create `ItemsPage.vue`
+- [x] Header with "Items Sorted" counter
+- [x] Boxes section with 2-column grid
+- [x] Create `BoxCard.vue` component
+- [x] Show box name, item count, assigned gradient bg
+- [x] Query boxes with item counts
+- [x] Discard categories section (full-width)
+- [x] Trash button with count
+- [x] Donate button with count
+- [x] Sell button with count
+- [x] Navigate to detail on tap
 
 ### Items Detail Page
 
-- [ ] Create `ItemsDetailPage.vue`
-- [ ] Handle both box and category routes
-- [ ] Header with back button, name, count
-- [ ] Grid of item thumbnails
-- [ ] Create `ItemCard.vue` component
-- [ ] Show photo thumbnail and name
-- [ ] Tap to open item modal
+- [x] Create `ItemsDetailPage.vue`
+- [x] Handle both box and category routes
+- [x] Header with back button, name, count
+- [x] Grid of item thumbnails
+- [x] Create `ItemCard.vue` component
+- [x] Show photo thumbnail and name
+- [x] Tap to open item modal
 
 ### Item Modal
 
-- [ ] Create `ItemModal.vue` component
-- [ ] Full-size photo display
-- [ ] Editable name field
-- [ ] Save name on blur/enter
-- [ ] "Move to..." button
-- [ ] Open destination picker (boxes + discard categories)
-- [ ] Allow moving to any box or any discard category
-- [ ] Implement `updateItemName` transaction
-- [ ] Implement `moveItem` transaction (handles status change)
-- [ ] Close modal on backdrop tap
+- [x] Create `ItemModal.vue` component
+- [x] Full-size photo display
+- [x] Editable name field
+- [x] Save name on blur/enter
+- [x] "Move to..." button
+- [x] Open destination picker (boxes + discard categories)
+- [x] Allow moving to any box or any discard category
+- [x] Implement `updateItemName` transaction
+- [x] Implement `moveItem` transaction (handles status change)
+- [x] Close modal on backdrop tap
 
 ---
 
