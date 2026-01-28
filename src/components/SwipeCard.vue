@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useDrag } from '@vueuse/gesture'
-import { useUpload } from '@/composables/useUpload'
+import { useImageLoader } from '@/composables/useImageLoader'
+import ImageFallback from '@/components/ImageFallback.vue'
 
 interface Props {
   photoPath: string
@@ -16,8 +17,7 @@ const emit = defineEmits<{
 }>()
 
 const cardRef = ref<HTMLElement | null>(null)
-const { getImageUrl } = useUpload()
-const imageUrl = ref<string | null>(null)
+const { imageUrl, state, handleImageLoad, handleImageError } = useImageLoader(props.photoPath)
 
 const DISTANCE_THRESHOLD = 100
 const VELOCITY_THRESHOLD = 0.5
@@ -81,10 +81,6 @@ const overlayStyle = computed(() => {
 
 const showKeep = computed(() => direction.value === 'right')
 const showDiscard = computed(() => direction.value === 'left')
-
-getImageUrl(props.photoPath).then((url) => {
-  imageUrl.value = url
-})
 </script>
 
 <template>
@@ -94,14 +90,20 @@ getImageUrl(props.photoPath).then((url) => {
     :style="cardStyle"
   >
     <img
-      v-if="imageUrl"
+      v-if="imageUrl && state !== 'error'"
       :src="imageUrl"
       :alt="name"
       class="absolute inset-0 h-full w-full object-cover"
+      @load="handleImageLoad"
+      @error="handleImageError"
     />
-    <div v-else class="absolute inset-0 flex items-center justify-center bg-surface">
+    <div
+      v-else-if="state === 'loading'"
+      class="absolute inset-0 flex items-center justify-center bg-surface"
+    >
       <span class="animate-pulse text-text-muted">Loading...</span>
     </div>
+    <ImageFallback v-else size="lg" class="absolute inset-0" />
 
     <div
       class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-16"

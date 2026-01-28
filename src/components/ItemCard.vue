@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useUpload } from '@/composables/useUpload'
+import { useImageLoader } from '@/composables/useImageLoader'
+import ImageFallback from '@/components/ImageFallback.vue'
 
 const props = defineProps<{
   id: string
@@ -12,12 +12,7 @@ defineEmits<{
   click: []
 }>()
 
-const { getImageUrl } = useUpload()
-const imageUrl = ref<string | null>(null)
-
-onMounted(async () => {
-  imageUrl.value = await getImageUrl(props.photoPath)
-})
+const { imageUrl, state, handleImageLoad, handleImageError } = useImageLoader(props.photoPath)
 </script>
 
 <template>
@@ -26,17 +21,20 @@ onMounted(async () => {
     @click="$emit('click')"
   >
     <img
-      v-if="imageUrl"
+      v-if="imageUrl && state !== 'error'"
       :src="imageUrl"
       :alt="name"
       class="h-full w-full object-cover"
+      @load="handleImageLoad"
+      @error="handleImageError"
     />
     <div
-      v-else
+      v-else-if="state === 'loading'"
       class="flex h-full w-full items-center justify-center bg-surface"
     >
       <span class="animate-pulse text-text-muted">...</span>
     </div>
+    <ImageFallback v-else size="sm" />
 
     <div
       class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-2"

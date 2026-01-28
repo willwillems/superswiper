@@ -278,7 +278,7 @@
 - [ ] Auth error messages
 - [ ] Upload failure handling with retry
 - [x] Network error toast notifications
-- [ ] Graceful degradation for failed image loads
+- [x] Graceful degradation for failed image loads
 
 ### Animation Refinements
 

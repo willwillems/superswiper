@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useUpload } from '@/composables/useUpload'
 import { useItems } from '@/composables/useItems'
 import { useBoxes } from '@/composables/useBoxes'
 import { useToast } from '@/composables/useToast'
+import { useImageLoader, type ImageLoadState } from '@/composables/useImageLoader'
+import ImageFallback from '@/components/ImageFallback.vue'
 
 const toast = useToast()
 
@@ -22,11 +23,12 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const { getImageUrl } = useUpload()
 const { updateItemName, moveItem } = useItems()
 const { sortedBoxes } = useBoxes()
 
+const photoPath = ref('')
 const imageUrl = ref<string | null>(null)
+const imageState = ref<ImageLoadState>('loading')
 const editedName = ref('')
 const showDestinationPicker = ref(false)
 const isSaving = ref(false)
@@ -45,16 +47,31 @@ const currentLocation = computed(() => {
   return props.item.status.charAt(0).toUpperCase() + props.item.status.slice(1)
 })
 
+const {
+  imageUrl: loadedImageUrl,
+  state: loadedImageState,
+  handleImageLoad,
+  handleImageError,
+} = useImageLoader(photoPath)
+
 watch(
   () => props.item,
-  async (item) => {
+  (item) => {
     if (item) {
       editedName.value = item.name
-      imageUrl.value = await getImageUrl(item.photoPath)
+      photoPath.value = item.photoPath
     }
   },
   { immediate: true }
 )
+
+watch(loadedImageUrl, (url) => {
+  imageUrl.value = url
+})
+
+watch(loadedImageState, (state) => {
+  imageState.value = state
+})
 
 function handleBackdropClick() {
   emit('close')
@@ -123,16 +140,22 @@ function getGradientClass(gradient: number): string {
         v-if="open && item"
         class="fixed inset-4 z-50 flex flex-col overflow-hidden rounded-2xl bg-surface"
       >
-        <div class="relative flex-1 overflow-hidden">
+        <div class="relative flex-1 overflow-hidden bg-black">
           <img
-            v-if="imageUrl"
+            v-if="imageUrl && imageState !== 'error'"
             :src="imageUrl"
             :alt="item.name"
-            class="h-full w-full object-contain bg-black"
+            class="h-full w-full object-contain"
+            @load="handleImageLoad"
+            @error="handleImageError"
           />
-          <div v-else class="flex h-full items-center justify-center bg-black">
+          <div
+            v-else-if="imageState === 'loading'"
+            class="flex h-full items-center justify-center"
+          >
             <span class="animate-pulse text-text-muted">Loading...</span>
           </div>
+          <ImageFallback v-else size="lg" />
 
           <button
             class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-transform active:scale-95"
