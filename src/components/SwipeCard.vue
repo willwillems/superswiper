@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useSwipe } from '@/composables/useSwipe'
+import { useDrag } from '@vueuse/gesture'
 import { useUpload } from '@/composables/useUpload'
 
 interface Props {
@@ -19,21 +19,61 @@ const cardRef = ref<HTMLElement | null>(null)
 const { getImageUrl } = useUpload()
 const imageUrl = ref<string | null>(null)
 
-const {
-  state,
-  direction,
-  progress,
-  cardStyle,
-  handlePointerDown,
-  handlePointerMove,
-  handlePointerUp,
-} = useSwipe(cardRef, {
-  onSwipeLeft: () => emit('swipeLeft'),
-  onSwipeRight: () => emit('swipeRight'),
+const DISTANCE_THRESHOLD = 100
+const VELOCITY_THRESHOLD = 0.5
+const MAX_ROTATION = 15
+
+const deltaX = ref(0)
+const deltaY = ref(0)
+const isDragging = ref(false)
+
+useDrag(
+  ({ movement: [mx, my], dragging, last, velocities: [vx] }) => {
+    isDragging.value = dragging
+
+    if (dragging) {
+      deltaX.value = mx
+      deltaY.value = my
+    }
+
+    if (last) {
+      const swipedRight = mx > DISTANCE_THRESHOLD || (mx > 0 && vx > VELOCITY_THRESHOLD)
+      const swipedLeft = mx < -DISTANCE_THRESHOLD || (mx < 0 && vx > VELOCITY_THRESHOLD)
+
+      if (swipedRight) {
+        emit('swipeRight')
+      } else if (swipedLeft) {
+        emit('swipeLeft')
+      }
+
+      deltaX.value = 0
+      deltaY.value = 0
+    }
+  },
+  { domTarget: cardRef },
+)
+
+type SwipeDirection = 'left' | 'right' | null
+
+const direction = computed<SwipeDirection>(() => {
+  if (Math.abs(deltaX.value) < DISTANCE_THRESHOLD) return null
+  return deltaX.value > 0 ? 'right' : 'left'
 })
 
+const progress = computed(() => Math.min(1, Math.abs(deltaX.value) / DISTANCE_THRESHOLD))
+
+const rotation = computed(() => {
+  const rotationAmount = (deltaX.value / DISTANCE_THRESHOLD) * MAX_ROTATION
+  return Math.max(-MAX_ROTATION, Math.min(MAX_ROTATION, rotationAmount))
+})
+
+const cardStyle = computed(() => ({
+  transform: `translate(${deltaX.value}px, ${deltaY.value}px) rotate(${rotation.value}deg)`,
+  transition: isDragging.value ? 'none' : 'transform 0.3s ease-out',
+}))
+
 const overlayStyle = computed(() => {
-  if (!state.value.isDragging || !direction.value) {
+  if (!isDragging.value || !direction.value) {
     return { opacity: 0 }
   }
   return { opacity: progress.value }
@@ -50,12 +90,8 @@ getImageUrl(props.photoPath).then((url) => {
 <template>
   <div
     ref="cardRef"
-    class="relative aspect-[3/4] w-full max-w-sm cursor-grab overflow-hidden rounded-2xl bg-surface shadow-xl select-none active:cursor-grabbing"
+    class="relative aspect-[3/4] w-full max-w-sm cursor-grab overflow-hidden rounded-2xl bg-surface shadow-xl select-none touch-none active:cursor-grabbing"
     :style="cardStyle"
-    @pointerdown="handlePointerDown"
-    @pointermove="handlePointerMove"
-    @pointerup="handlePointerUp"
-    @pointercancel="handlePointerUp"
   >
     <img
       v-if="imageUrl"
@@ -63,10 +99,7 @@ getImageUrl(props.photoPath).then((url) => {
       :alt="name"
       class="absolute inset-0 h-full w-full object-cover"
     />
-    <div
-      v-else
-      class="absolute inset-0 flex items-center justify-center bg-surface"
-    >
+    <div v-else class="absolute inset-0 flex items-center justify-center bg-surface">
       <span class="animate-pulse text-text-muted">Loading...</span>
     </div>
 
@@ -81,7 +114,9 @@ getImageUrl(props.photoPath).then((url) => {
       class="pointer-events-none absolute inset-0 flex items-center justify-center bg-keep/30"
       :style="overlayStyle"
     >
-      <span class="rotate-[-15deg] rounded-lg border-4 border-keep px-4 py-2 text-3xl font-bold text-keep">
+      <span
+        class="rotate-[-15deg] rounded-lg border-4 border-keep px-4 py-2 text-3xl font-bold text-keep"
+      >
         KEEP
       </span>
     </div>
@@ -91,7 +126,9 @@ getImageUrl(props.photoPath).then((url) => {
       class="pointer-events-none absolute inset-0 flex items-center justify-center bg-discard/30"
       :style="overlayStyle"
     >
-      <span class="rotate-[15deg] rounded-lg border-4 border-discard px-4 py-2 text-3xl font-bold text-discard">
+      <span
+        class="rotate-[15deg] rounded-lg border-4 border-discard px-4 py-2 text-3xl font-bold text-discard"
+      >
         DISCARD
       </span>
     </div>

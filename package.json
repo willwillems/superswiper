@@ -1,5 +1,5 @@
 {
-  "name": "-superswiper",
+  "name": "superswiper",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@instantdb/core": "^0.22.116",
+    "@vueuse/gesture": "^2.0.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
@@ -39,6 +40,7 @@
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
+    "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-vue-devtools": "^8.0.5",
     "vitest": "^4.0.17",
     "vue-tsc": "^3.2.2"
