@@ -1,6 +1,6 @@
 # Development Guide
 
-Ensure your code is _declarative_, _elegant_, _functional_, and _maintainable_. Prefer expressions, avoid nesting, and return early. Check your work using type checks and linting. After completing a task, commit your work.
+Ensure your code is _declarative_, _elegant_, _functional_, and _maintainable_. Prefer expressions, avoid nesting, and return early. Check your work using type checks linting, and the browser. After completing a task, commit your work.
 
 ## Commands
 
