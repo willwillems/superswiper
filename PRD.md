@@ -269,14 +269,14 @@
 ### Loading States
 
 - [x] Auth page loading during magic code send
-- [ ] Upload progress indicator
+- [x] Upload progress indicator
 - [x] Swipe page skeleton while loading items
 - [x] Items page skeleton while loading
 
 ### Error Handling
 
 - [x] Auth error messages
-- [ ] Upload failure handling with retry
+- [x] Upload failure handling with retry
 - [x] Network error toast notifications
 - [x] Graceful degradation for failed image loads
 

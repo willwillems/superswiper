@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useUpload } from '@/composables/useUpload'
+import { ref, watch, computed } from 'vue'
+import { useUpload, type UploadItem } from '@/composables/useUpload'
 import { useItems } from '@/composables/useItems'
 import { useToast } from '@/composables/useToast'
+import UploadProgress from '@/components/UploadProgress.vue'
 
 type Mode = 'camera' | 'upload'
 
 const mode = ref<Mode>('camera')
-const { uploadImage, error: uploadError } = useUpload()
+const {
+  uploadImage,
+  error: uploadError,
+  uploadQueue,
+  addToQueue,
+  processQueueItem,
+  retryFailed,
+  clearQueue,
+  failedCount,
+} = useUpload()
 const { createItem } = useItems()
 const toast = useToast()
 
@@ -21,7 +31,10 @@ const cameraInput = ref<HTMLInputElement | null>(null)
 const uploadInput = ref<HTMLInputElement | null>(null)
 const itemsAdded = ref(0)
 const isProcessing = ref(false)
-const pendingUploads = ref(0)
+
+const showUploadProgress = computed(
+  () => mode.value === 'upload' && uploadQueue.value.length > 0
+)
 
 async function handleCapture(event: Event) {
   const input = event.target as HTMLInputElement
@@ -39,26 +52,44 @@ async function handleCapture(event: Event) {
   }
 }
 
+async function processUploadQueue(items: UploadItem[]) {
+  isProcessing.value = true
+
+  for (const item of items) {
+    if (item.status !== 'pending') continue
+    try {
+      const fileId = await processQueueItem(item)
+      await createItem(fileId)
+      itemsAdded.value++
+    } catch {
+      // Error is already captured in the queue item
+    }
+  }
+
+  isProcessing.value = false
+}
+
 async function handleUpload(event: Event) {
   const input = event.target as HTMLInputElement
   const files = input.files
   if (!files?.length) return
 
-  pendingUploads.value = files.length
-  isProcessing.value = true
-
-  for (const file of Array.from(files)) {
-    try {
-      const path = await uploadImage(file)
-      await createItem(path)
-      itemsAdded.value++
-    } finally {
-      pendingUploads.value--
-    }
-  }
-
-  isProcessing.value = false
+  const items = addToQueue(Array.from(files))
   input.value = ''
+
+  await processUploadQueue(items)
+}
+
+async function handleRetryFailed() {
+  await retryFailed()
+  const pendingItems = uploadQueue.value.filter(
+    (item) => item.status === 'pending'
+  )
+  await processUploadQueue(pendingItems)
+}
+
+function handleClearQueue() {
+  clearQueue()
 }
 
 function triggerCamera() {
@@ -140,15 +171,19 @@ function triggerUpload() {
           class="hidden"
           @change="handleUpload"
         />
-        <p v-if="pendingUploads > 0" class="text-sm text-text-muted">
-          {{ pendingUploads }} remaining...
-        </p>
       </template>
 
       <p v-if="uploadError" class="text-sm text-discard">
         {{ uploadError }}
       </p>
     </div>
+
+    <UploadProgress
+      v-if="showUploadProgress"
+      :items="uploadQueue"
+      :on-retry="failedCount > 0 ? handleRetryFailed : undefined"
+      :on-clear="handleClearQueue"
+    />
 
     <div
       v-if="itemsAdded > 0"
