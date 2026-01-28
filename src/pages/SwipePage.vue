@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useItems } from '@/composables/useItems'
 import { useBoxes } from '@/composables/useBoxes'
 import { useStreak } from '@/composables/useStreak'
+import { useToast } from '@/composables/useToast'
 import SwipeCard from '@/components/SwipeCard.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
 import BoxPickerSheet from '@/components/BoxPickerSheet.vue'
@@ -13,9 +14,18 @@ import EmptyState from '@/components/EmptyState.vue'
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
 
 const router = useRouter()
-const { unsortedItems, isLoading, discardItem, keepItem } = useItems()
-const { createBox } = useBoxes()
+const { unsortedItems, isLoading, error: itemsError, discardItem, keepItem } = useItems()
+const { createBox, error: boxesError } = useBoxes()
 const { sessionStreak, shouldTriggerConfetti, incrementStreak, clearConfettiTrigger } = useStreak()
+const toast = useToast()
+
+watch(itemsError, (err) => {
+  if (err?.message) toast.error(err.message)
+})
+
+watch(boxesError, (err) => {
+  if (err?.message) toast.error(err.message)
+})
 
 const currentIndex = ref(0)
 const showDiscardSheet = ref(false)
@@ -40,19 +50,29 @@ function handleSwipeRight() {
 async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
   if (!pendingItemId.value) return
 
-  await discardItem(pendingItemId.value, status)
-  incrementStreak()
-  pendingItemId.value = null
-  advanceToNext()
+  try {
+    await discardItem(pendingItemId.value, status)
+    incrementStreak()
+    advanceToNext()
+  } catch {
+    toast.error('Failed to sort item. Please try again.')
+  } finally {
+    pendingItemId.value = null
+  }
 }
 
 async function handleBoxSelect(boxId: string) {
   if (!pendingItemId.value) return
 
-  await keepItem(pendingItemId.value, boxId)
-  incrementStreak()
-  pendingItemId.value = null
-  advanceToNext()
+  try {
+    await keepItem(pendingItemId.value, boxId)
+    incrementStreak()
+    advanceToNext()
+  } catch {
+    toast.error('Failed to sort item. Please try again.')
+  } finally {
+    pendingItemId.value = null
+  }
 }
 
 function handleCreateNewBox() {
@@ -61,13 +81,18 @@ function handleCreateNewBox() {
 }
 
 async function handleCreateBox(name: string) {
-  const boxId = await createBox(name)
+  try {
+    const boxId = await createBox(name)
 
-  if (pendingItemId.value) {
-    await keepItem(pendingItemId.value, boxId)
-    incrementStreak()
+    if (pendingItemId.value) {
+      await keepItem(pendingItemId.value, boxId)
+      incrementStreak()
+      advanceToNext()
+    }
+  } catch {
+    toast.error('Failed to create box. Please try again.')
+  } finally {
     pendingItemId.value = null
-    advanceToNext()
   }
 }
 

@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import BottomNav from '@/components/BottomNav.vue'
+import ToastContainer from '@/components/ToastContainer.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -18,6 +19,7 @@ async function handleLogout() {
 </script>
 
 <template>
+  <ToastContainer />
   <div class="flex min-h-dvh flex-col">
     <header
       v-if="showHeader"

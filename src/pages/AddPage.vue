@@ -1,13 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useUpload } from '@/composables/useUpload'
 import { useItems } from '@/composables/useItems'
+import { useToast } from '@/composables/useToast'
 
 type Mode = 'camera' | 'upload'
 
 const mode = ref<Mode>('camera')
 const { uploadImage, error: uploadError } = useUpload()
 const { createItem } = useItems()
+const toast = useToast()
+
+watch(uploadError, (err) => {
+  if (err) {
+    toast.error(err)
+  }
+})
 
 const cameraInput = ref<HTMLInputElement | null>(null)
 const uploadInput = ref<HTMLInputElement | null>(null)
