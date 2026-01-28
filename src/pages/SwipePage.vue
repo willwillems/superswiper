@@ -10,6 +10,7 @@ import BoxPickerSheet from '@/components/BoxPickerSheet.vue'
 import CreateBoxModal from '@/components/CreateBoxModal.vue'
 import ConfettiExplosion from '@/components/ConfettiExplosion.vue'
 import EmptyState from '@/components/EmptyState.vue'
+import SkeletonLoader from '@/components/SkeletonLoader.vue'
 
 const router = useRouter()
 const { unsortedItems, isLoading, discardItem, keepItem } = useItems()
@@ -105,9 +106,18 @@ function goToAddItems() {
       <span class="text-lg font-semibold text-keep">{{ sessionStreak }} sorted</span>
     </div>
 
-    <div v-if="isLoading" class="flex flex-col items-center gap-4">
-      <div class="flex h-64 w-full max-w-sm items-center justify-center rounded-2xl bg-surface">
-        <span class="animate-pulse text-text-muted">Loading items...</span>
+    <div v-if="isLoading" class="flex w-full max-w-sm flex-col items-center gap-4">
+      <div class="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-surface">
+        <SkeletonLoader width="100%" height="100%" rounded="2xl" />
+        <div class="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-4">
+          <SkeletonLoader width="60%" height="1.5rem" rounded="lg" />
+          <SkeletonLoader width="40%" height="1rem" rounded="lg" />
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <SkeletonLoader width="4rem" height="1rem" rounded="lg" />
+        <SkeletonLoader width="0.5rem" height="0.5rem" rounded="full" />
+        <SkeletonLoader width="4rem" height="1rem" rounded="lg" />
       </div>
     </div>
 

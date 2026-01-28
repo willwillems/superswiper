@@ -5,6 +5,7 @@ import { useBoxes } from '@/composables/useBoxes'
 import { useItems } from '@/composables/useItems'
 import { useUserStats } from '@/composables/useUserStats'
 import BoxCard from '@/components/BoxCard.vue'
+import SkeletonLoader from '@/components/SkeletonLoader.vue'
 
 const router = useRouter()
 const { sortedBoxes, isLoading: boxesLoading } = useBoxes()
@@ -66,8 +67,11 @@ function navigateToCategory(category: string) {
     <section class="flex flex-col gap-3">
       <h2 class="text-lg font-semibold text-text-muted">Boxes</h2>
 
-      <div v-if="boxesLoading" class="flex justify-center py-8">
-        <span class="animate-pulse text-text-muted">Loading...</span>
+      <div v-if="boxesLoading" class="grid grid-cols-2 gap-3">
+        <div v-for="i in 4" :key="i" class="flex h-24 flex-col justify-end gap-2 rounded-xl bg-surface p-3">
+          <SkeletonLoader width="70%" height="1rem" rounded="lg" />
+          <SkeletonLoader width="40%" height="0.75rem" rounded="lg" />
+        </div>
       </div>
 
       <div v-else-if="sortedBoxes.length === 0" class="grid grid-cols-2 gap-3">
@@ -93,8 +97,14 @@ function navigateToCategory(category: string) {
     <section class="flex flex-col gap-3">
       <h2 class="text-lg font-semibold text-text-muted">Discarded</h2>
 
-      <div v-if="itemsLoading" class="flex justify-center py-4">
-        <span class="animate-pulse text-text-muted">Loading...</span>
+      <div v-if="itemsLoading" class="flex flex-col gap-2">
+        <div v-for="i in 3" :key="i" class="flex items-center justify-between rounded-xl bg-surface px-4 py-3">
+          <div class="flex items-center gap-2">
+            <SkeletonLoader width="1.5rem" height="1.5rem" rounded="md" />
+            <SkeletonLoader width="4rem" height="1rem" rounded="lg" />
+          </div>
+          <SkeletonLoader width="2rem" height="1rem" rounded="lg" />
+        </div>
       </div>
 
       <div v-else class="flex flex-col gap-2">

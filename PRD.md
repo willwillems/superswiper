@@ -268,10 +268,10 @@
 
 ### Loading States
 
-- [ ] Auth page loading during magic code send
+- [x] Auth page loading during magic code send
 - [ ] Upload progress indicator
-- [ ] Swipe page skeleton while loading items
-- [ ] Items page skeleton while loading
+- [x] Swipe page skeleton while loading items
+- [x] Items page skeleton while loading
 
 ### Error Handling
 
