@@ -3,21 +3,24 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useItems } from '@/composables/useItems'
 import { useBoxes } from '@/composables/useBoxes'
+import { useStreak } from '@/composables/useStreak'
 import SwipeCard from '@/components/SwipeCard.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
 import BoxPickerSheet from '@/components/BoxPickerSheet.vue'
 import CreateBoxModal from '@/components/CreateBoxModal.vue'
+import ConfettiExplosion from '@/components/ConfettiExplosion.vue'
+import EmptyState from '@/components/EmptyState.vue'
 
 const router = useRouter()
 const { unsortedItems, isLoading, discardItem, keepItem } = useItems()
 const { createBox } = useBoxes()
+const { sessionStreak, shouldTriggerConfetti, incrementStreak, clearConfettiTrigger } = useStreak()
 
 const currentIndex = ref(0)
 const showDiscardSheet = ref(false)
 const showBoxPicker = ref(false)
 const showCreateBox = ref(false)
 const pendingItemId = ref<string | null>(null)
-const sessionStreak = ref(0)
 
 const currentItem = computed(() => unsortedItems.value[currentIndex.value])
 
@@ -37,7 +40,7 @@ async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
   if (!pendingItemId.value) return
 
   await discardItem(pendingItemId.value, status)
-  sessionStreak.value++
+  incrementStreak()
   pendingItemId.value = null
   advanceToNext()
 }
@@ -46,7 +49,7 @@ async function handleBoxSelect(boxId: string) {
   if (!pendingItemId.value) return
 
   await keepItem(pendingItemId.value, boxId)
-  sessionStreak.value++
+  incrementStreak()
   pendingItemId.value = null
   advanceToNext()
 }
@@ -61,7 +64,7 @@ async function handleCreateBox(name: string) {
 
   if (pendingItemId.value) {
     await keepItem(pendingItemId.value, boxId)
-    sessionStreak.value++
+    incrementStreak()
     pendingItemId.value = null
     advanceToNext()
   }
@@ -130,19 +133,14 @@ function goToAddItems() {
       </div>
     </div>
 
-    <div v-else class="flex flex-col items-center gap-6 text-center">
-      <div class="text-6xl">🎉</div>
-      <div>
-        <h2 class="text-xl font-semibold">All caught up!</h2>
-        <p class="text-text-muted">You've sorted all your items</p>
-      </div>
-      <button
-        class="rounded-xl bg-accent px-6 py-3 font-medium text-white transition-transform active:scale-95"
-        @click="goToAddItems"
-      >
-        Add more items
-      </button>
-    </div>
+    <EmptyState
+      v-else
+      icon="🎉"
+      title="All caught up!"
+      description="You've sorted all your items"
+      action-label="Add more items"
+      @action="goToAddItems"
+    />
 
     <DiscardSheet
       :open="showDiscardSheet"
@@ -161,6 +159,11 @@ function goToAddItems() {
       :open="showCreateBox"
       @close="handleCloseCreateBox"
       @create="handleCreateBox"
+    />
+
+    <ConfettiExplosion
+      :trigger="shouldTriggerConfetti"
+      @complete="clearConfettiTrigger"
     />
   </div>
 </template>

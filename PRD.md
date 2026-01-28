@@ -234,33 +234,33 @@
 
 ### Session Streak
 
-- [ ] Create `useStreak` composable
-- [ ] Track items sorted in current session
-- [ ] Increment on each sort action
-- [ ] Reset on page refresh (ref-based)
-- [ ] Expose streak count for display
+- [x] Create `useStreak` composable
+- [x] Track items sorted in current session
+- [x] Increment on each sort action
+- [x] Reset on page refresh (ref-based)
+- [x] Expose streak count for display
 
 ### Confetti Celebration
 
-- [ ] Create `ConfettiExplosion.vue` component
-- [ ] Particle animation system
-- [ ] Trigger at streak count === 5
-- [ ] Use vibrant colors matching theme
-- [ ] ~2 second duration
-- [ ] Clean up particles after animation
+- [x] Create `ConfettiExplosion.vue` component
+- [x] Particle animation system
+- [x] Trigger at streak count === 5
+- [x] Use vibrant colors matching theme
+- [x] ~2 second duration
+- [x] Clean up particles after animation
 
 ### Stats Display
 
-- [ ] Show session streak on swipe page
+- [x] Show session streak on swipe page
 - [ ] Show all-time sorted count on items page
 - [ ] Subtle animation on counter increment
 
 ### Empty State
 
-- [ ] Create `EmptyState.vue` component
-- [ ] Celebratory message when all sorted
-- [ ] "Add more items" CTA button
-- [ ] Playful illustration or animation
+- [x] Create `EmptyState.vue` component
+- [x] Celebratory message when all sorted
+- [x] "Add more items" CTA button
+- [x] Playful illustration or animation
 
 ---
 
