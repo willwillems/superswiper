@@ -2,6 +2,18 @@ import { ref } from 'vue'
 import { db } from '@/db'
 import { useImageCompression } from './useImageCompression'
 
+function generateUUID(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+  // Fallback for non-secure contexts or older browsers
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 export function useUpload() {
   const { compressImage } = useImageCompression()
   const isUploading = ref(false)
@@ -13,7 +25,7 @@ export function useUpload() {
 
     try {
       const compressed = await compressImage(file)
-      const filename = `${crypto.randomUUID()}.jpg`
+      const filename = `${generateUUID()}.jpg`
       const uploadFile = new File([compressed], filename, { type: 'image/jpeg' })
 
       const result = await db.storage.uploadFile(filename, uploadFile)
