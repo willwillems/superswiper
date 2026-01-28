@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useBoxes } from '@/composables/useBoxes'
 import { useItems } from '@/composables/useItems'
@@ -9,6 +10,22 @@ const router = useRouter()
 const { sortedBoxes, isLoading: boxesLoading } = useBoxes()
 const { trashItems, donateItems, sellItems, isLoading: itemsLoading } = useItems()
 const { stats } = useUserStats()
+
+const isAnimating = ref(false)
+let previousCount = stats.value.itemsSorted
+
+watch(
+  () => stats.value.itemsSorted,
+  (newCount) => {
+    if (newCount > previousCount && previousCount > 0) {
+      isAnimating.value = true
+      setTimeout(() => {
+        isAnimating.value = false
+      }, 300)
+    }
+    previousCount = newCount
+  }
+)
 
 const discardCategories = [
   { key: 'trash', label: 'Trash', icon: '🗑️' },
@@ -37,7 +54,10 @@ function navigateToCategory(category: string) {
       <h1 class="text-2xl font-bold">Your Items</h1>
       <div
         v-if="stats.itemsSorted > 0"
-        class="rounded-full bg-accent/20 px-3 py-1 text-sm font-medium text-accent"
+        :class="[
+          'rounded-full bg-accent/20 px-3 py-1 text-sm font-medium text-accent transition-transform',
+          isAnimating && 'animate-bounce-once',
+        ]"
       >
         {{ stats.itemsSorted }} sorted
       </div>

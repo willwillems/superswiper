@@ -252,8 +252,8 @@
 ### Stats Display
 
 - [x] Show session streak on swipe page
-- [ ] Show all-time sorted count on items page
-- [ ] Subtle animation on counter increment
+- [x] Show all-time sorted count on items page
+- [x] Subtle animation on counter increment
 
 ### Empty State
 
