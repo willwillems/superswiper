@@ -17,7 +17,7 @@ function getGradientClass(gradient: number): string {
       getGradientClass(gradient),
     ]"
   >
-    <span class="font-semibold">{{ name }}</span>
+    <span class="w-full truncate px-2 font-semibold">{{ name }}</span>
     <span class="text-sm text-white/70">
       {{ itemCount }} {{ itemCount === 1 ? 'item' : 'items' }}
     </span>

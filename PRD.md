@@ -289,7 +289,7 @@
 
 ### Edge Cases
 
-- [ ] Handle very long item/box names
+- [x] Handle very long item/box names
 - [ ] Handle missing/broken images
 - [ ] Handle rapid successive swipes
 - [ ] Handle offline state (InstantDB handles this)

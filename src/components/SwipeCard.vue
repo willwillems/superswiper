@@ -108,7 +108,7 @@ const showDiscard = computed(() => direction.value === 'left')
     <div
       class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-16"
     >
-      <p class="text-lg font-semibold text-white">{{ name }}</p>
+      <p class="line-clamp-2 text-lg font-semibold text-white">{{ name }}</p>
     </div>
 
     <div
