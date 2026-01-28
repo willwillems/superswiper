@@ -300,9 +300,9 @@
 
 ### AI Features
 
-- [ ] AI item naming via Vision API
-- [ ] AI box image generation
-- [ ] Cloudflare Worker for AI endpoints
+- [-] AI item naming via Vision API
+- [-] AI box image generation
+- [-] Cloudflare Worker for AI endpoints
 
 ### Additional Features
 
