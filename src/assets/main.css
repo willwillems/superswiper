@@ -1,3 +1,70 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-keep: #10B981;
+  --color-keep-light: #34D399;
+  --color-discard: #F43F5E;
+  --color-discard-light: #FB7185;
+  --color-accent: #8B5CF6;
+  --color-accent-light: #A78BFA;
+  --color-surface: #1F2937;
+  --color-background: #111827;
+  --color-text-primary: #F9FAFB;
+  --color-text-muted: #9CA3AF;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+}
+
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@utility pl-safe {
+  padding-left: env(safe-area-inset-left, 0);
+}
+
+@utility pr-safe {
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+@layer components {
+  .box-gradient-0 {
+    background: linear-gradient(135deg, #f97316, #fb923c);
+  }
+  .box-gradient-1 {
+    background: linear-gradient(135deg, #ec4899, #f472b6);
+  }
+  .box-gradient-2 {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  }
+  .box-gradient-3 {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  }
+  .box-gradient-4 {
+    background: linear-gradient(135deg, #06b6d4, #22d3ee);
+  }
+  .box-gradient-5 {
+    background: linear-gradient(135deg, #10b981, #34d399);
+  }
+  .box-gradient-6 {
+    background: linear-gradient(135deg, #eab308, #facc15);
+  }
+  .box-gradient-7 {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+  }
+}

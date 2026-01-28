@@ -8,15 +8,18 @@ const _schema = i.schema({
     }),
     $users: i.entity({
       email: i.string().unique().indexed().optional(),
+      itemsSorted: i.number().optional(),
     }),
     items: i.entity({
       name: i.string(),
       photoPath: i.string(),
       status: i.string().indexed(),
       createdAt: i.number().indexed(),
+      sortedAt: i.number().optional(),
     }),
     boxes: i.entity({
       name: i.string(),
+      gradient: i.number(),
       createdAt: i.number().indexed(),
     }),
   },
@@ -37,8 +40,7 @@ const _schema = i.schema({
   rooms: {},
 })
 
-type _AppSchema = typeof _schema
-interface AppSchema extends _AppSchema {}
+type AppSchema = typeof _schema
 const schema: AppSchema = _schema
 
 export type { AppSchema }
