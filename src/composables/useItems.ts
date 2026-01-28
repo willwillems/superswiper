@@ -122,22 +122,24 @@ export function useItems() {
     const userId = user.value?.id
     if (!userId) throw new Error('Not authenticated')
 
+    const currentCount = await getItemsSortedCount(userId)
+
     await db.transact([
       db.tx.items![itemId]!.update({
         status,
         sortedAt: Date.now(),
       }),
-      db.tx.$users![userId]!.merge({
-        itemsSorted: (db.tx.$users![userId] as unknown as { itemsSorted: number }).itemsSorted ?? 0,
+      db.tx.$users![userId]!.update({
+        itemsSorted: currentCount + 1,
       }),
     ])
-
-    await incrementItemsSorted(userId)
   }
 
   async function keepItem(itemId: string, boxId: string) {
     const userId = user.value?.id
     if (!userId) throw new Error('Not authenticated')
+
+    const currentCount = await getItemsSortedCount(userId)
 
     await db.transact([
       db.tx.items![itemId]!.update({
@@ -145,22 +147,17 @@ export function useItems() {
         sortedAt: Date.now(),
       }),
       db.tx.items![itemId]!.link({ box: boxId }),
-    ])
-
-    await incrementItemsSorted(userId)
-  }
-
-  async function incrementItemsSorted(userId: string) {
-    const result = await db.queryOnce({
-      $users: { $: { where: { id: userId } } },
-    })
-    const currentCount = result.data?.$users?.[0]?.itemsSorted ?? 0
-
-    await db.transact([
       db.tx.$users![userId]!.update({
         itemsSorted: currentCount + 1,
       }),
     ])
+  }
+
+  async function getItemsSortedCount(userId: string): Promise<number> {
+    const result = await db.queryOnce({
+      $users: { $: { where: { id: userId } } },
+    })
+    return result.data?.$users?.[0]?.itemsSorted ?? 0
   }
 
   async function updateItemName(itemId: string, name: string) {

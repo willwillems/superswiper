@@ -291,7 +291,7 @@
 
 - [x] Handle very long item/box names
 - [ ] Handle missing/broken images
-- [ ] Handle rapid successive swipes
+- [x] Handle rapid successive swipes
 - [ ] Handle offline state (InstantDB handles this)
 
 ---

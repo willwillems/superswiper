@@ -32,17 +32,20 @@ const showDiscardSheet = ref(false)
 const showBoxPicker = ref(false)
 const showCreateBox = ref(false)
 const pendingItemId = ref<string | null>(null)
+const isProcessing = ref(false)
 
 const currentItem = computed(() => unsortedItems.value[currentIndex.value])
 
 function handleSwipeLeft() {
-  if (!currentItem.value) return
+  if (!currentItem.value || isProcessing.value) return
+  isProcessing.value = true
   pendingItemId.value = currentItem.value.id
   showDiscardSheet.value = true
 }
 
 function handleSwipeRight() {
-  if (!currentItem.value) return
+  if (!currentItem.value || isProcessing.value) return
+  isProcessing.value = true
   pendingItemId.value = currentItem.value.id
   showBoxPicker.value = true
 }
@@ -58,6 +61,7 @@ async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
     toast.error('Failed to sort item. Please try again.')
   } finally {
     pendingItemId.value = null
+    isProcessing.value = false
   }
 }
 
@@ -72,6 +76,7 @@ async function handleBoxSelect(boxId: string) {
     toast.error('Failed to sort item. Please try again.')
   } finally {
     pendingItemId.value = null
+    isProcessing.value = false
   }
 }
 
@@ -93,29 +98,37 @@ async function handleCreateBox(name: string) {
     toast.error('Failed to create box. Please try again.')
   } finally {
     pendingItemId.value = null
+    isProcessing.value = false
   }
 }
 
 function advanceToNext() {
+  // The sorted item will be filtered out by the subscription, so just ensure
+  // the index stays within bounds. After the subscription updates, the array
+  // length decreases by 1, so if we're at the last item, we need to go back.
   if (currentIndex.value >= unsortedItems.value.length - 1) {
-    currentIndex.value = 0
+    currentIndex.value = Math.max(0, unsortedItems.value.length - 2)
   }
 }
 
 function handleCloseDiscardSheet() {
   showDiscardSheet.value = false
   pendingItemId.value = null
+  isProcessing.value = false
 }
 
 function handleCloseBoxPicker() {
   showBoxPicker.value = false
   pendingItemId.value = null
+  isProcessing.value = false
 }
 
 function handleCloseCreateBox() {
   showCreateBox.value = false
   if (pendingItemId.value) {
     showBoxPicker.value = true
+  } else {
+    isProcessing.value = false
   }
 }
 

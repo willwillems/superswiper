@@ -22,13 +22,31 @@ const { imageUrl, state, handleImageLoad, handleImageError } = useImageLoader(pr
 const DISTANCE_THRESHOLD = 100
 const VELOCITY_THRESHOLD = 0.5
 const MAX_ROTATION = 15
+const FLY_OFF_DURATION = 300
 
 const deltaX = ref(0)
 const deltaY = ref(0)
 const isDragging = ref(false)
+const isFlyingOff = ref(false)
+
+function flyOff(direction: 'left' | 'right') {
+  isFlyingOff.value = true
+  const flyDistance = window.innerWidth + 200
+  deltaX.value = direction === 'right' ? flyDistance : -flyDistance
+
+  setTimeout(() => {
+    if (direction === 'right') {
+      emit('swipeRight')
+    } else {
+      emit('swipeLeft')
+    }
+  }, FLY_OFF_DURATION)
+}
 
 useDrag(
   ({ movement: [mx, my], dragging, last, velocities: [vx] }) => {
+    if (isFlyingOff.value) return
+
     isDragging.value = dragging
 
     if (dragging) {
@@ -41,13 +59,13 @@ useDrag(
       const swipedLeft = mx < -DISTANCE_THRESHOLD || (mx < 0 && vx > VELOCITY_THRESHOLD)
 
       if (swipedRight) {
-        emit('swipeRight')
+        flyOff('right')
       } else if (swipedLeft) {
-        emit('swipeLeft')
+        flyOff('left')
+      } else {
+        deltaX.value = 0
+        deltaY.value = 0
       }
-
-      deltaX.value = 0
-      deltaY.value = 0
     }
   },
   { domTarget: cardRef },
@@ -56,6 +74,9 @@ useDrag(
 type SwipeDirection = 'left' | 'right' | null
 
 const direction = computed<SwipeDirection>(() => {
+  if (isFlyingOff.value) {
+    return deltaX.value > 0 ? 'right' : 'left'
+  }
   if (Math.abs(deltaX.value) < DISTANCE_THRESHOLD) return null
   return deltaX.value > 0 ? 'right' : 'left'
 })
@@ -69,10 +90,17 @@ const rotation = computed(() => {
 
 const cardStyle = computed(() => ({
   transform: `translate(${deltaX.value}px, ${deltaY.value}px) rotate(${rotation.value}deg)`,
-  transition: isDragging.value ? 'none' : 'transform 0.3s ease-out',
+  transition: isDragging.value
+    ? 'none'
+    : isFlyingOff.value
+      ? `transform ${FLY_OFF_DURATION}ms ease-out`
+      : 'transform 0.3s ease-out',
 }))
 
 const overlayStyle = computed(() => {
+  if (isFlyingOff.value) {
+    return { opacity: 1 }
+  }
   if (!isDragging.value || !direction.value) {
     return { opacity: 0 }
   }
