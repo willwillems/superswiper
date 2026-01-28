@@ -285,7 +285,7 @@
 - [x] Button press feedback (scale)
 - [x] Page transition animations
 - [x] Sheet open/close smoothness
-- [ ] Card stack visual depth
+- [x] Card stack visual depth
 
 ### Edge Cases
 

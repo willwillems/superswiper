@@ -6,6 +6,7 @@ import { useBoxes } from '@/composables/useBoxes'
 import { useStreak } from '@/composables/useStreak'
 import { useToast } from '@/composables/useToast'
 import SwipeCard from '@/components/SwipeCard.vue'
+import SwipeCardBackground from '@/components/SwipeCardBackground.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
 import BoxPickerSheet from '@/components/BoxPickerSheet.vue'
 import CreateBoxModal from '@/components/CreateBoxModal.vue'
@@ -35,6 +36,14 @@ const pendingItemId = ref<string | null>(null)
 const isProcessing = ref(false)
 
 const currentItem = computed(() => unsortedItems.value[currentIndex.value])
+
+// Show up to 3 cards in the stack for visual depth
+const stackedCards = computed(() =>
+  unsortedItems.value.slice(currentIndex.value, currentIndex.value + 3),
+)
+
+// Background cards in the stack (excluding current card)
+const backgroundCards = computed(() => stackedCards.value.slice(1))
 
 function handleSwipeLeft() {
   if (!currentItem.value || isProcessing.value) return
@@ -160,13 +169,24 @@ function goToAddItems() {
     </div>
 
     <div v-else-if="currentItem" class="flex w-full flex-col items-center gap-4">
-      <SwipeCard
-        :key="currentItem.id"
-        :photo-path="currentItem.photoPath"
-        :name="currentItem.name"
-        @swipe-left="handleSwipeLeft"
-        @swipe-right="handleSwipeRight"
-      />
+      <div class="relative w-full max-w-sm">
+        <!-- Background cards for stack visual depth (rendered back-to-front) -->
+        <SwipeCardBackground
+          v-for="(item, index) in backgroundCards.slice().reverse()"
+          :key="item.id"
+          :photo-path="item.photoPath"
+          :stack-index="backgroundCards.length - index"
+        />
+
+        <!-- Current (top) card - interactive -->
+        <SwipeCard
+          :key="currentItem.id"
+          :photo-path="currentItem.photoPath"
+          :name="currentItem.name"
+          @swipe-left="handleSwipeLeft"
+          @swipe-right="handleSwipeRight"
+        />
+      </div>
 
       <div class="flex items-center gap-4 text-text-muted">
         <span class="flex items-center gap-1">
