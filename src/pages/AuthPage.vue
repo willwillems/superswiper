@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 
 const router = useRouter()
-const { sendMagicCode, verifyMagicCode, signInAsGuest, error } = useAuth()
+const { sendMagicCode, verifyMagicCode, signInAsGuest, error, clearError } = useAuth()
 
 const step = ref<'email' | 'code'>('email')
 const email = ref('')
@@ -40,6 +40,7 @@ async function handleCodeSubmit() {
 function handleBack() {
   step.value = 'email'
   code.value = ''
+  clearError()
 }
 
 async function handleGuestSignIn() {
@@ -74,6 +75,7 @@ async function handleGuestSignIn() {
         autocomplete="email"
         required
         class="w-full rounded-xl bg-surface px-4 py-3 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
+        @input="clearError"
       />
       <button
         type="submit"
@@ -130,6 +132,7 @@ async function handleGuestSignIn() {
         autocomplete="one-time-code"
         required
         class="w-full rounded-xl bg-surface px-4 py-3 text-center text-2xl tracking-widest text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent"
+        @input="clearError"
       />
       <button
         type="submit"

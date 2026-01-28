@@ -24,12 +24,46 @@ export function useAuth() {
   const isAuthenticated = computed(() => authState.value === 'authenticated')
   const isGuest = computed(() => isAuthenticated.value && !user.value?.email)
 
+  function formatAuthError(e: unknown, context: 'send' | 'verify' | 'guest'): string {
+    const message = e instanceof Error ? e.message.toLowerCase() : ''
+
+    if (message.includes('network') || message.includes('fetch')) {
+      return 'Unable to connect. Please check your internet connection.'
+    }
+
+    if (context === 'send') {
+      if (message.includes('invalid') && message.includes('email')) {
+        return 'Please enter a valid email address.'
+      }
+      if (message.includes('rate') || message.includes('too many')) {
+        return 'Too many attempts. Please wait a moment and try again.'
+      }
+      return 'Could not send the code. Please check your email and try again.'
+    }
+
+    if (context === 'verify') {
+      if (message.includes('invalid') || message.includes('incorrect') || message.includes('wrong')) {
+        return 'Invalid code. Please check and try again.'
+      }
+      if (message.includes('expired')) {
+        return 'Code expired. Please request a new one.'
+      }
+      return 'Could not verify the code. Please try again.'
+    }
+
+    return 'Something went wrong. Please try again.'
+  }
+
+  function clearError() {
+    error.value = null
+  }
+
   async function sendMagicCode(email: string) {
     error.value = null
     try {
       await db.auth.sendMagicCode({ email })
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to send code'
+      error.value = formatAuthError(e, 'send')
       throw e
     }
   }
@@ -39,7 +73,7 @@ export function useAuth() {
     try {
       await db.auth.signInWithMagicCode({ email, code })
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Invalid code'
+      error.value = formatAuthError(e, 'verify')
       throw e
     }
   }
@@ -49,7 +83,7 @@ export function useAuth() {
     try {
       await db.auth.signInAsGuest()
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to sign in as guest'
+      error.value = formatAuthError(e, 'guest')
       throw e
     }
   }
@@ -95,5 +129,6 @@ export function useAuth() {
     signInAsGuest,
     logout,
     waitForAuth,
+    clearError,
   }
 }

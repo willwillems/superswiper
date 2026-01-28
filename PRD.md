@@ -275,7 +275,7 @@
 
 ### Error Handling
 
-- [ ] Auth error messages
+- [x] Auth error messages
 - [ ] Upload failure handling with retry
 - [x] Network error toast notifications
 - [x] Graceful degradation for failed image loads
