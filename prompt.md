@@ -6,4 +6,4 @@ IMPORTANT:
 - Complete the task
 - Add testing if necessary
 - Check your work using linting, testing, typechecking, and the browser
-- When everything passes, commit your work
+- When everything passes, check the developed requirements in ./PRD.md and commit your work
