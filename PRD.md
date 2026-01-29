@@ -363,9 +363,9 @@ Transform SuperSwiper from a functional decluttering tool into a **fun, playful,
 
 ### Sprint 1: Foundation
 
-1. [ ] Update color system in `main.css`
-2. [ ] Create `ActionButton.vue` component
-3. [ ] Create `xpStore.ts`
+1. [x] Update color system in `main.css`
+2. [x] Create `ActionButton.vue` component
+3. [x] Create `xpStore.ts`
 
 ### Sprint 2: Swipe Experience
 

@@ -7,11 +7,21 @@
   --color-discard-light: #FB7185;
   --color-accent: #8B5CF6;
   --color-accent-light: #A78BFA;
+  --color-undo: #F59E0B;
+  --color-undo-light: #FBBF24;
   --color-surface: #1F2937;
   --color-background: #111827;
   --color-text-primary: #F9FAFB;
   --color-text-muted: #9CA3AF;
   --color-border: rgba(255, 255, 255, 0.1);
+}
+
+:root {
+  --gradient-keep: linear-gradient(135deg, #10b981, #34d399);
+  --gradient-discard: linear-gradient(135deg, #f43f5e, #fb7185);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  --gradient-undo: linear-gradient(135deg, #f59e0b, #fbbf24);
+  --gradient-card-overlay: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.8) 100%);
 }
 
 html.light {
