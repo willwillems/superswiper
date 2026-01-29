@@ -320,6 +320,6 @@
 
 - [x] Add unit tests for composables
 - [x] Add component tests for critical flows
-- [ ] Set up error monitoring (Sentry or similar)
+- [x] Set up error monitoring (Sentry or similar)
 - [x] Performance audit (bundle size, render performance)
 - [x] Accessibility audit (screen reader, keyboard nav)

@@ -1,4 +1,5 @@
 import { ref, readonly } from 'vue'
+import * as Sentry from '@sentry/vue'
 
 export type ToastType = 'success' | 'error' | 'info'
 
@@ -32,8 +33,9 @@ export function useToast() {
     addToast(message, 'success')
   }
 
-  function error(message: string) {
+  function error(message: string, originalError?: unknown) {
     addToast(message, 'error')
+    Sentry.captureException(originalError ?? new Error(message))
   }
 
   function info(message: string) {

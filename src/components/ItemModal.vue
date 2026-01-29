@@ -96,8 +96,8 @@ async function saveName() {
   isSaving.value = true
   try {
     await updateItemName(props.item.id, editedName.value)
-  } catch {
-    toast.error('Failed to save name. Please try again.')
+  } catch (err) {
+    toast.error('Failed to save name. Please try again.', err)
   } finally {
     isSaving.value = false
   }
@@ -111,8 +111,8 @@ async function handleMoveToBox(boxId: string) {
     await moveItem(props.item.id, { boxId })
     showDestinationPicker.value = false
     emit('close')
-  } catch {
-    toast.error('Failed to move item. Please try again.')
+  } catch (err) {
+    toast.error('Failed to move item. Please try again.', err)
   } finally {
     isSaving.value = false
   }
@@ -126,8 +126,8 @@ async function handleMoveToCategory(status: 'trash' | 'donate' | 'sell') {
     await moveItem(props.item.id, { status })
     showDestinationPicker.value = false
     emit('close')
-  } catch {
-    toast.error('Failed to move item. Please try again.')
+  } catch (err) {
+    toast.error('Failed to move item. Please try again.', err)
   } finally {
     isSaving.value = false
   }

@@ -30,11 +30,11 @@ const { playDiscardSound, playKeepSound, playCelebrationSound, playUndoSound } =
 useAchievements()
 
 watch(itemsError, (err) => {
-  if (err?.message) toast.error(err.message)
+  if (err?.message) toast.error(err.message, err)
 })
 
 watch(boxesError, (err) => {
-  if (err?.message) toast.error(err.message)
+  if (err?.message) toast.error(err.message, err)
 })
 
 watch(shouldTriggerConfetti, (trigger) => {
@@ -90,9 +90,9 @@ async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
     playDiscardSound()
     incrementStreak()
     advanceToNext()
-  } catch {
+  } catch (err) {
     popUndo()
-    toast.error('Failed to sort item. Please try again.')
+    toast.error('Failed to sort item. Please try again.', err)
   } finally {
     pendingItemId.value = null
     isProcessing.value = false
@@ -118,9 +118,9 @@ async function handleBoxSelect(boxId: string) {
     playKeepSound()
     incrementStreak()
     advanceToNext()
-  } catch {
+  } catch (err) {
     popUndo()
-    toast.error('Failed to sort item. Please try again.')
+    toast.error('Failed to sort item. Please try again.', err)
   } finally {
     pendingItemId.value = null
     isProcessing.value = false
@@ -152,9 +152,9 @@ async function handleCreateBox(name: string) {
       incrementStreak()
       advanceToNext()
     }
-  } catch {
+  } catch (err) {
     popUndo()
-    toast.error('Failed to create box. Please try again.')
+    toast.error('Failed to create box. Please try again.', err)
   } finally {
     pendingItemId.value = null
     isProcessing.value = false
@@ -206,9 +206,9 @@ async function handleUndo() {
     playUndoSound()
     setStreak(action.streakBefore)
     toast.success(`Undid "${action.itemName}"`)
-  } catch {
+  } catch (err) {
     recordSort(action)
-    toast.error('Failed to undo. Please try again.')
+    toast.error('Failed to undo. Please try again.', err)
   } finally {
     isProcessing.value = false
   }

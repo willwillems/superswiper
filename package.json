@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@instantdb/core": "^0.22.116",
+    "@sentry/vue": "^10.37.0",
     "@vueuse/gesture": "^2.0.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
