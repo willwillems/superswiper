@@ -11,6 +11,15 @@
   --color-background: #111827;
   --color-text-primary: #F9FAFB;
   --color-text-muted: #9CA3AF;
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+html.light {
+  --color-surface: #FFFFFF;
+  --color-background: #F3F4F6;
+  --color-text-primary: #111827;
+  --color-text-muted: #6B7280;
+  --color-border: rgba(0, 0, 0, 0.1);
 }
 
 @layer base {

@@ -193,7 +193,7 @@ function getGradientClass(gradient: number): string {
               :id="nameInputId"
               v-model="editedName"
               type="text"
-              class="rounded-lg bg-background px-4 py-3 text-white outline-none ring-accent focus:ring-2"
+              class="rounded-lg bg-background px-4 py-3 text-text-primary outline-none ring-accent focus:ring-2"
               @blur="saveName"
               @keydown.enter="($event.target as HTMLInputElement).blur()"
             />

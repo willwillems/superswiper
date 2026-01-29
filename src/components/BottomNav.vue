@@ -42,7 +42,7 @@ function navigateNext() {
 
 <template>
   <nav
-    class="flex items-stretch border-t border-white/10 bg-surface pb-safe"
+    class="flex items-stretch border-t border-border bg-surface pb-safe"
     role="tablist"
     aria-label="Main navigation"
   >

@@ -100,15 +100,15 @@ async function handleGuestSignIn() {
       </button>
 
       <div class="flex items-center gap-3">
-        <div class="h-px flex-1 bg-white/10" />
+        <div class="h-px flex-1 bg-border" />
         <span class="text-sm text-text-muted">or</span>
-        <div class="h-px flex-1 bg-white/10" />
+        <div class="h-px flex-1 bg-border" />
       </div>
 
       <button
         type="button"
         :disabled="isSubmitting"
-        class="w-full rounded-xl border border-white/20 px-4 py-3 font-semibold text-text-primary transition-transform active:scale-95 disabled:opacity-50"
+        class="w-full rounded-xl border border-border px-4 py-3 font-semibold text-text-primary transition-transform active:scale-95 disabled:opacity-50"
         @click="handleGuestSignIn"
       >
         Continue as Guest

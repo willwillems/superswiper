@@ -312,7 +312,7 @@
 - [ ] Detailed statistics page
 - [ ] Achievement badges
 - [ ] Sound effects
-- [ ] Light mode option
+- [x] Light mode option
 
 ---
 
