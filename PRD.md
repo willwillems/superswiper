@@ -382,7 +382,7 @@ Transform SuperSwiper from a functional decluttering tool into a **fun, playful,
 
 ### Sprint 4: Other Pages
 
-11. [ ] Update `AddPage.vue`
+11. [x] Update `AddPage.vue`
 12. [ ] Update `ItemsPage.vue`
 13. [ ] Update `StatsPage.vue`
 14. [ ] Update `AuthPage.vue`
