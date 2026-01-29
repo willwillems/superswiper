@@ -6,6 +6,7 @@ import BottomNav from '@/components/BottomNav.vue'
 import ToastContainer from '@/components/ToastContainer.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import SoundToggle from '@/components/SoundToggle.vue'
+import NotificationToggle from '@/components/NotificationToggle.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,6 +37,7 @@ async function handleLogout() {
     >
       <h1 class="py-3 text-lg font-bold">SuperSwiper</h1>
       <div class="flex items-center gap-1">
+        <NotificationToggle />
         <SoundToggle />
         <ThemeToggle />
         <button

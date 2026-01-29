@@ -308,7 +308,7 @@
 
 - [x] Undo recent sort action
 - [x] Share donate/sell lists
-- [ ] Push notification reminders
+- [x] Push notification reminders
 - [x] Detailed statistics page
 - [x] Achievement badges
 - [x] Sound effects
