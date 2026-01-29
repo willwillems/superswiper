@@ -306,7 +306,7 @@
 
 ### Additional Features
 
-- [ ] Undo recent sort action
+- [x] Undo recent sort action
 - [ ] Share donate/sell lists
 - [ ] Push notification reminders
 - [ ] Detailed statistics page

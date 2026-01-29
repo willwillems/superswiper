@@ -88,4 +88,21 @@ describe('useStreak', () => {
     instance1.incrementStreak()
     expect(instance2.sessionStreak.value).toBe(1)
   })
+
+  it('sets streak to specific value', () => {
+    const { sessionStreak, incrementStreak, setStreak } = useStreak()
+    incrementStreak()
+    incrementStreak()
+    incrementStreak()
+    expect(sessionStreak.value).toBe(3)
+
+    setStreak(1)
+    expect(sessionStreak.value).toBe(1)
+  })
+
+  it('does not set streak below zero', () => {
+    const { sessionStreak, setStreak } = useStreak()
+    setStreak(-5)
+    expect(sessionStreak.value).toBe(0)
+  })
 })

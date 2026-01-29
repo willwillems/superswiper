@@ -187,6 +187,26 @@ export function useItems() {
     }
   }
 
+  async function undoSort(itemId: string) {
+    const userId = user.value?.id
+    if (!userId) throw new Error('Not authenticated')
+
+    const currentCount = await getItemsSortedCount(userId)
+
+    const transactions = [
+      db.tx.items![itemId]!.update({
+        status: 'unsorted',
+        sortedAt: null,
+      }),
+      db.tx.items![itemId]!.unlink({ box: '' }),
+      db.tx.$users![userId]!.update({
+        itemsSorted: Math.max(0, currentCount - 1),
+      }),
+    ]
+
+    await db.transact(transactions)
+  }
+
   return {
     items,
     unsortedItems,
@@ -203,5 +223,6 @@ export function useItems() {
     keepItem,
     updateItemName,
     moveItem,
+    undoSort,
   }
 }

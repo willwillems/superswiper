@@ -5,6 +5,7 @@ import { useItems } from '@/composables/useItems'
 import { useBoxes } from '@/composables/useBoxes'
 import { useStreak } from '@/composables/useStreak'
 import { useToast } from '@/composables/useToast'
+import { useUndoHistory } from '@/composables/useUndoHistory'
 import SwipeCard from '@/components/SwipeCard.vue'
 import SwipeCardBackground from '@/components/SwipeCardBackground.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
@@ -15,10 +16,11 @@ import EmptyState from '@/components/EmptyState.vue'
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
 
 const router = useRouter()
-const { unsortedItems, isLoading, error: itemsError, discardItem, keepItem } = useItems()
+const { unsortedItems, isLoading, error: itemsError, discardItem, keepItem, undoSort } = useItems()
 const { createBox, error: boxesError } = useBoxes()
-const { sessionStreak, shouldTriggerConfetti, incrementStreak, clearConfettiTrigger } = useStreak()
+const { sessionStreak, shouldTriggerConfetti, incrementStreak, setStreak, clearConfettiTrigger } = useStreak()
 const toast = useToast()
+const { canUndo, recordSort, popUndo } = useUndoHistory()
 
 watch(itemsError, (err) => {
   if (err?.message) toast.error(err.message)
@@ -62,11 +64,22 @@ function handleSwipeRight() {
 async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
   if (!pendingItemId.value) return
 
+  const item = currentItem.value
+  if (!item) return
+
   try {
+    recordSort({
+      itemId: pendingItemId.value,
+      itemName: item.name,
+      previousStatus: 'unsorted',
+      newStatus: status,
+      streakBefore: sessionStreak.value,
+    })
     await discardItem(pendingItemId.value, status)
     incrementStreak()
     advanceToNext()
   } catch {
+    popUndo()
     toast.error('Failed to sort item. Please try again.')
   } finally {
     pendingItemId.value = null
@@ -77,11 +90,23 @@ async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
 async function handleBoxSelect(boxId: string) {
   if (!pendingItemId.value) return
 
+  const item = currentItem.value
+  if (!item) return
+
   try {
+    recordSort({
+      itemId: pendingItemId.value,
+      itemName: item.name,
+      previousStatus: 'unsorted',
+      newStatus: 'kept',
+      newBoxId: boxId,
+      streakBefore: sessionStreak.value,
+    })
     await keepItem(pendingItemId.value, boxId)
     incrementStreak()
     advanceToNext()
   } catch {
+    popUndo()
     toast.error('Failed to sort item. Please try again.')
   } finally {
     pendingItemId.value = null
@@ -95,15 +120,26 @@ function handleCreateNewBox() {
 }
 
 async function handleCreateBox(name: string) {
+  const item = currentItem.value
+
   try {
     const boxId = await createBox(name)
 
-    if (pendingItemId.value) {
+    if (pendingItemId.value && item) {
+      recordSort({
+        itemId: pendingItemId.value,
+        itemName: item.name,
+        previousStatus: 'unsorted',
+        newStatus: 'kept',
+        newBoxId: boxId,
+        streakBefore: sessionStreak.value,
+      })
       await keepItem(pendingItemId.value, boxId)
       incrementStreak()
       advanceToNext()
     }
   } catch {
+    popUndo()
     toast.error('Failed to create box. Please try again.')
   } finally {
     pendingItemId.value = null
@@ -144,13 +180,46 @@ function handleCloseCreateBox() {
 function goToAddItems() {
   router.push({ name: 'add' })
 }
+
+async function handleUndo() {
+  const action = popUndo()
+  if (!action || isProcessing.value) return
+
+  isProcessing.value = true
+
+  try {
+    await undoSort(action.itemId)
+    setStreak(action.streakBefore)
+    toast.success(`Undid "${action.itemName}"`)
+  } catch {
+    recordSort(action)
+    toast.error('Failed to undo. Please try again.')
+  } finally {
+    isProcessing.value = false
+  }
+}
 </script>
 
 <template>
   <div class="flex flex-1 flex-col items-center justify-center gap-6 p-6">
-    <div v-if="sessionStreak > 0" class="flex items-center gap-2">
-      <span class="text-2xl">🔥</span>
-      <span class="text-lg font-semibold text-keep">{{ sessionStreak }} sorted</span>
+    <div class="flex items-center gap-4">
+      <Transition name="fade">
+        <button
+          v-if="canUndo"
+          class="flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm text-text-muted transition-colors hover:bg-surface/80 active:scale-95"
+          :disabled="isProcessing"
+          @click="handleUndo"
+        >
+          <span class="text-base">↩</span>
+          <span>Undo</span>
+        </button>
+      </Transition>
+      <Transition name="fade">
+        <div v-if="sessionStreak > 0" class="flex items-center gap-2">
+          <span class="text-2xl">🔥</span>
+          <span class="text-lg font-semibold text-keep">{{ sessionStreak }} sorted</span>
+        </div>
+      </Transition>
     </div>
 
     <div v-if="isLoading" class="flex w-full max-w-sm flex-col items-center gap-4">

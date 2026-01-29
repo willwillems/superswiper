@@ -18,6 +18,10 @@ export function useStreak() {
     sessionStreak.value = 0
   }
 
+  function setStreak(value: number) {
+    sessionStreak.value = Math.max(0, value)
+  }
+
   function clearConfettiTrigger() {
     shouldTriggerConfetti.value = false
   }
@@ -32,6 +36,7 @@ export function useStreak() {
     shouldTriggerConfetti,
     incrementStreak,
     resetSessionStreak,
+    setStreak,
     clearConfettiTrigger,
     CONFETTI_THRESHOLD,
   }
