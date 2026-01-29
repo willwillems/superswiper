@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useStatistics } from '@/composables/useStatistics'
+import { useAchievements } from '@/composables/useAchievements'
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
+import AchievementBadge from '@/components/AchievementBadge.vue'
 
 const {
   isLoading,
@@ -15,6 +17,14 @@ const {
   keepRate,
   discardRate,
 } = useStatistics()
+
+const {
+  achievementsWithStatus,
+  unlockedCount,
+  totalCount,
+  nextAchievement,
+  progressToNext,
+} = useAchievements()
 
 const categoryLabels = {
   kept: { label: 'Kept', icon: '✓', color: 'bg-keep' },
@@ -104,6 +114,38 @@ const categoryLabels = {
         <div class="flex justify-between text-xs">
           <span class="text-keep">{{ keepRate }}% kept</span>
           <span class="text-discard">{{ discardRate }}% discarded</span>
+        </div>
+      </section>
+
+      <section class="flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-text-muted">Achievements</h2>
+          <span class="text-xs text-text-muted">{{ unlockedCount }} / {{ totalCount }}</span>
+        </div>
+        <div v-if="nextAchievement" class="flex flex-col gap-2 rounded-xl bg-surface p-4">
+          <div class="flex items-center gap-2 text-sm">
+            <span>{{ nextAchievement.icon }}</span>
+            <span class="text-text-muted">Next:</span>
+            <span class="font-medium">{{ nextAchievement.name }}</span>
+          </div>
+          <div class="h-2 overflow-hidden rounded-full bg-background">
+            <div
+              class="h-full rounded-full bg-accent transition-all duration-500"
+              :style="{ width: `${progressToNext}%` }"
+            />
+          </div>
+          <span class="text-xs text-text-muted">{{ nextAchievement.description }}</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <AchievementBadge
+            v-for="achievement in achievementsWithStatus"
+            :key="achievement.id"
+            :icon="achievement.icon"
+            :name="achievement.name"
+            :description="achievement.description"
+            :unlocked="achievement.unlocked"
+            :unlocked-at="achievement.unlockedAt"
+          />
         </div>
       </section>
 

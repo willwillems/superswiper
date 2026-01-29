@@ -7,6 +7,7 @@ import { useStreak } from '@/composables/useStreak'
 import { useToast } from '@/composables/useToast'
 import { useUndoHistory } from '@/composables/useUndoHistory'
 import { useSound } from '@/composables/useSound'
+import { useAchievements } from '@/composables/useAchievements'
 import SwipeCard from '@/components/SwipeCard.vue'
 import SwipeCardBackground from '@/components/SwipeCardBackground.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
@@ -24,6 +25,9 @@ const { sessionStreak, shouldTriggerConfetti, incrementStreak, setStreak, clearC
 const toast = useToast()
 const { canUndo, recordSort, popUndo } = useUndoHistory()
 const { playDiscardSound, playKeepSound, playCelebrationSound, playUndoSound } = useSound()
+
+// Initialize achievements watcher to trigger unlocks on sort
+useAchievements()
 
 watch(itemsError, (err) => {
   if (err?.message) toast.error(err.message)

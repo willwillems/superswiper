@@ -310,7 +310,7 @@
 - [x] Share donate/sell lists
 - [ ] Push notification reminders
 - [x] Detailed statistics page
-- [ ] Achievement badges
+- [x] Achievement badges
 - [x] Sound effects
 - [x] Light mode option
 
