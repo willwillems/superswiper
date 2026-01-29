@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useDrag } from '@vueuse/gesture'
 import { useImageLoader } from '@/composables/useImageLoader'
 import ImageFallback from '@/components/ImageFallback.vue'
@@ -42,6 +42,26 @@ function flyOff(direction: 'left' | 'right') {
     }
   }, FLY_OFF_DURATION)
 }
+
+function handleKeyDown(event: KeyboardEvent) {
+  if (isFlyingOff.value) return
+
+  if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
+    event.preventDefault()
+    flyOff('left')
+  } else if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
+    event.preventDefault()
+    flyOff('right')
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyDown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown)
+})
 
 useDrag(
   ({ movement: [mx, my], dragging, last, velocities: [vx] }) => {
@@ -114,7 +134,10 @@ const showDiscard = computed(() => direction.value === 'left')
 <template>
   <div
     ref="cardRef"
-    class="relative aspect-[3/4] w-full max-w-sm cursor-grab overflow-hidden rounded-2xl bg-surface shadow-xl select-none touch-none active:cursor-grabbing"
+    role="region"
+    :aria-label="`Item card for ${name}. Swipe left to discard, swipe right to keep. Use arrow keys or A/D keys as keyboard shortcuts.`"
+    tabindex="0"
+    class="relative aspect-[3/4] w-full max-w-sm cursor-grab overflow-hidden rounded-2xl bg-surface shadow-xl select-none touch-none focus:outline-none focus-visible:ring-4 focus-visible:ring-accent active:cursor-grabbing"
     :style="cardStyle"
   >
     <img
@@ -128,6 +151,8 @@ const showDiscard = computed(() => direction.value === 'left')
     <div
       v-else-if="state === 'loading'"
       class="absolute inset-0 flex items-center justify-center bg-surface"
+      role="status"
+      aria-label="Loading image"
     >
       <span class="animate-pulse text-text-muted">Loading...</span>
     </div>
@@ -143,6 +168,7 @@ const showDiscard = computed(() => direction.value === 'left')
       v-if="showKeep"
       class="pointer-events-none absolute inset-0 flex items-center justify-center bg-keep/30"
       :style="overlayStyle"
+      aria-hidden="true"
     >
       <span
         class="rotate-[-15deg] rounded-lg border-4 border-keep px-4 py-2 text-3xl font-bold text-keep"
@@ -155,6 +181,7 @@ const showDiscard = computed(() => direction.value === 'left')
       v-if="showDiscard"
       class="pointer-events-none absolute inset-0 flex items-center justify-center bg-discard/30"
       :style="overlayStyle"
+      aria-hidden="true"
     >
       <span
         class="rotate-[15deg] rounded-lg border-4 border-discard px-4 py-2 text-3xl font-bold text-discard"

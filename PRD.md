@@ -322,4 +322,4 @@
 - [x] Add component tests for critical flows
 - [ ] Set up error monitoring (Sentry or similar)
 - [ ] Performance audit (bundle size, render performance)
-- [ ] Accessibility audit (screen reader, keyboard nav)
+- [x] Accessibility audit (screen reader, keyboard nav)

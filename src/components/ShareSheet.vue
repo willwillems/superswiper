@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed, toRef } from 'vue'
 import { useShare, type ShareableCategory } from '@/composables/useShare'
 import type { Item } from '@/composables/useItems'
+import { useFocusTrap, useEscapeKey, useUniqueId } from '@/composables/useAccessibility'
 
 const props = defineProps<{
   open: boolean
@@ -12,6 +13,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   close: []
 }>()
+
+const sheetRef = ref<HTMLElement | null>(null)
+const titleId = useUniqueId('share-sheet-title')
+
+const isOpen = toRef(props, 'open')
+useFocusTrap(sheetRef, isOpen)
+useEscapeKey(isOpen, () => emit('close'))
 
 const { shareItems, canUseNativeShare } = useShare()
 
@@ -44,30 +52,36 @@ function handleBackdropClick() {
     <Transition name="slide-up">
       <div
         v-if="open"
+        ref="sheetRef"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="titleId"
         class="fixed inset-x-0 bottom-0 z-50 rounded-t-3xl bg-surface p-6 pb-safe"
       >
-        <div class="mx-auto mb-4 h-1 w-12 rounded-full bg-text-muted/30" />
+        <div class="mx-auto mb-4 h-1 w-12 rounded-full bg-text-muted/30" aria-hidden="true" />
 
-        <h2 class="mb-2 text-center text-lg font-semibold">{{ title }}</h2>
+        <h2 :id="titleId" class="mb-2 text-center text-lg font-semibold">{{ title }}</h2>
         <p class="mb-4 text-center text-sm text-text-muted">
           {{ itemCount }} item{{ itemCount === 1 ? '' : 's' }}
         </p>
 
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3" role="group" aria-label="Share options">
           <button
             v-if="canUseNativeShare"
-            class="flex items-center gap-4 rounded-xl bg-background px-4 py-4 text-left transition-transform active:scale-[0.98]"
+            aria-label="Share list using device share menu"
+            class="flex items-center gap-4 rounded-xl bg-background px-4 py-4 text-left transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
             @click="handleShare('native')"
           >
-            <span class="text-2xl">📤</span>
+            <span class="text-2xl" aria-hidden="true">📤</span>
             <span class="text-lg font-medium">Share</span>
           </button>
 
           <button
-            class="flex items-center gap-4 rounded-xl bg-background px-4 py-4 text-left transition-transform active:scale-[0.98]"
+            aria-label="Copy list to clipboard"
+            class="flex items-center gap-4 rounded-xl bg-background px-4 py-4 text-left transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
             @click="handleShare('copy')"
           >
-            <span class="text-2xl">📋</span>
+            <span class="text-2xl" aria-hidden="true">📋</span>
             <span class="text-lg font-medium">Copy to Clipboard</span>
           </button>
         </div>

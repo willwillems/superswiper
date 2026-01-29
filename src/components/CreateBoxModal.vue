@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, toRef } from 'vue'
+import { useFocusTrap, useEscapeKey, useUniqueId } from '@/composables/useAccessibility'
 
-defineProps<{
+const props = defineProps<{
   open: boolean
 }>()
 
@@ -12,6 +13,13 @@ const emit = defineEmits<{
 
 const boxName = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
+const modalRef = ref<HTMLElement | null>(null)
+const titleId = useUniqueId('create-box-title')
+const inputId = useUniqueId('box-name-input')
+
+const isOpen = toRef(props, 'open')
+useFocusTrap(modalRef, isOpen)
+useEscapeKey(isOpen, () => emit('close'))
 
 watch(
   () => inputRef.value,
@@ -55,11 +63,17 @@ function handleKeydown(event: KeyboardEvent) {
     <Transition name="scale">
       <div
         v-if="open"
+        ref="modalRef"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="titleId"
         class="fixed inset-x-4 top-1/2 z-50 -translate-y-1/2 rounded-2xl bg-surface p-6"
       >
-        <h2 class="mb-4 text-center text-lg font-semibold">Create New Box</h2>
+        <h2 :id="titleId" class="mb-4 text-center text-lg font-semibold">Create New Box</h2>
 
+        <label :for="inputId" class="sr-only">Box name</label>
         <input
+          :id="inputId"
           ref="inputRef"
           v-model="boxName"
           type="text"
@@ -70,14 +84,15 @@ function handleKeydown(event: KeyboardEvent) {
 
         <div class="flex gap-3">
           <button
-            class="flex-1 rounded-xl bg-background px-4 py-3 font-medium text-text-muted transition-all hover:bg-background/80 active:scale-95"
+            class="flex-1 rounded-xl bg-background px-4 py-3 font-medium text-text-muted transition-all hover:bg-background/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-95"
             @click="handleBackdropClick"
           >
             Cancel
           </button>
           <button
             :disabled="!boxName.trim()"
-            class="flex-1 rounded-xl bg-accent px-4 py-3 font-medium text-white transition-all hover:bg-accent-light active:scale-95 disabled:opacity-50"
+            :aria-disabled="!boxName.trim()"
+            class="flex-1 rounded-xl bg-accent px-4 py-3 font-medium text-white transition-all hover:bg-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 disabled:opacity-50"
             @click="handleSubmit"
           >
             Create
