@@ -143,7 +143,7 @@ function getGradientClass(gradient: number): string {
     <Transition name="fade">
       <div
         v-if="open && item"
-        class="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm"
+        class="fixed inset-0 z-40 bg-backdrop backdrop-blur-sm"
         @click="handleBackdropClick"
       />
     </Transition>
@@ -220,7 +220,7 @@ function getGradientClass(gradient: number): string {
     <Transition name="fade">
       <div
         v-if="showDestinationPicker"
-        class="fixed inset-0 z-60 bg-black/60 backdrop-blur-sm"
+        class="fixed inset-0 z-60 bg-backdrop backdrop-blur-sm"
         @click="showDestinationPicker = false"
       />
     </Transition>

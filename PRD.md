@@ -390,7 +390,7 @@ Transform SuperSwiper from a functional decluttering tool into a **fun, playful,
 ### Sprint 5: Polish
 
 15. [x] Refine animations and transitions
-16. [ ] Test dark/light mode consistency
+16. [x] Test dark/light mode consistency
 17. [ ] Accessibility review
 18. [ ] Performance check
 
