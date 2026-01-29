@@ -384,7 +384,7 @@ Transform SuperSwiper from a functional decluttering tool into a **fun, playful,
 
 11. [x] Update `AddPage.vue`
 12. [x] Update `ItemsPage.vue`
-13. [ ] Update `StatsPage.vue`
+13. [x] Update `StatsPage.vue`
 14. [ ] Update `AuthPage.vue`
 
 ### Sprint 5: Polish
