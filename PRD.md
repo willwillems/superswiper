@@ -377,7 +377,7 @@ Transform SuperSwiper from a functional decluttering tool into a **fun, playful,
 ### Sprint 3: Navigation & Sheets
 
 8. [x] Redesign `BottomNav.vue`
-9. [ ] Update `DiscardSheet.vue`
+9. [x] Update `DiscardSheet.vue`
 10. [ ] Update `BoxPickerSheet.vue`
 
 ### Sprint 4: Other Pages

@@ -21,10 +21,36 @@ const isOpen = toRef(props, 'open')
 useFocusTrap(sheetRef, isOpen)
 useEscapeKey(isOpen, () => emit('close'))
 
-const options: { status: DiscardStatus; label: string; icon: string }[] = [
-  { status: 'trash', label: 'Trash', icon: '🗑️' },
-  { status: 'donate', label: 'Donate', icon: '🎁' },
-  { status: 'sell', label: 'Sell', icon: '💰' },
+interface DiscardOption {
+  status: DiscardStatus
+  label: string
+  icon: string
+  gradient: string
+  iconBgClass: string
+}
+
+const options: DiscardOption[] = [
+  {
+    status: 'trash',
+    label: 'Trash',
+    icon: '🗑️',
+    gradient: 'linear-gradient(135deg, #6b7280, #9ca3af)',
+    iconBgClass: 'bg-gray-500/20',
+  },
+  {
+    status: 'donate',
+    label: 'Donate',
+    icon: '🎁',
+    gradient: 'linear-gradient(135deg, #f97316, #fb923c)',
+    iconBgClass: 'bg-orange-500/20',
+  },
+  {
+    status: 'sell',
+    label: 'Sell',
+    icon: '💰',
+    gradient: 'linear-gradient(135deg, #14b8a6, #2dd4bf)',
+    iconBgClass: 'bg-teal-500/20',
+  },
 ]
 
 function handleSelect(status: DiscardStatus) {
@@ -67,11 +93,18 @@ function handleBackdropClick() {
             v-for="option in options"
             :key="option.status"
             :aria-label="`${option.label} this item`"
-            class="flex items-center gap-4 rounded-xl bg-background px-4 py-4 text-left transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.98]"
+            class="discard-option group flex min-h-14 items-center gap-4 rounded-2xl bg-background px-4 py-3 text-left transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.97]"
             @click="handleSelect(option.status)"
           >
-            <span class="text-2xl" aria-hidden="true">{{ option.icon }}</span>
-            <span class="text-lg font-medium">{{ option.label }}</span>
+            <span
+              class="flex size-11 shrink-0 items-center justify-center rounded-full text-2xl shadow-md transition-transform duration-100 group-active:scale-90"
+              :class="option.iconBgClass"
+              :style="{ background: option.gradient }"
+              aria-hidden="true"
+            >
+              {{ option.icon }}
+            </span>
+            <span class="text-lg font-semibold">{{ option.label }}</span>
           </button>
         </div>
       </div>
