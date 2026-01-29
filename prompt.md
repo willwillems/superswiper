@@ -1,5 +1,6 @@
 Study ./plan/PLAN.md thoroughly.
-Study ./plan/PRD.md and pick the highest leverage unchecked task.
+Study ./plan/UI.md thoroughly.
+Study ./PRD.md and pick the highest leverage unchecked task.
 
 IMPORTANT:
 

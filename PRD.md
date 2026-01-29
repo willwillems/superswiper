@@ -1,325 +1,484 @@
-# SuperSwiper - Requirements Tracker
+# SuperSwiper - UI Redesign Requirements
 
-## Phase 1: Foundation
+## Overview
 
-### Schema & Database
+Transform SuperSwiper from a functional decluttering tool into a **fun, playful, and engaging** experience inspired by Tinder's visual language. This redesign focuses on vibrant gradients, satisfying interactions, and a new XP system to gamify the decluttering process.
 
-- [x] Define `items` entity (name, photoPath, status, createdAt, sortedAt)
-- [x] Define `boxes` entity (name, gradient, createdAt)
-- [x] Add `itemsSorted` field to $users
-- [x] Create `itemOwner` link (items → $users)
-- [x] Create `boxOwner` link (boxes → $users)
-- [x] Create `itemBox` link (items → boxes)
-- [x] Push schema to InstantDB
+### Design Principles
 
-### Permissions
-
-- [x] Items: users can only CRUD their own items
-- [x] Boxes: users can only CRUD their own boxes
-- [x] $users: users can view/update their own record
-- [x] $files: users can upload and view their own files
-- [x] Push permissions to InstantDB
-
-### Authentication
-
-- [x] Create `useAuth` composable wrapping InstantDB auth
-- [x] Create `AuthPage.vue` with email input step
-- [x] Add code verification step to AuthPage
-- [x] Handle auth errors with user feedback
-- [x] Redirect to home after successful auth
-
-### App Shell & Navigation
-
-- [x] Create `AppShell.vue` layout component
-- [x] Create `BottomNav.vue` with 3 tabs (Swipe, Add, Items)
-- [x] Style bottom nav with active states
-- [x] Add safe area padding for mobile notches
-- [x] Add settings menu with logout action
-
-### Routing
-
-- [x] Configure `/auth` route (AuthPage)
-- [x] Configure `/` route (SwipePage)
-- [x] Configure `/add` route (AddPage)
-- [x] Configure `/items` route (ItemsPage)
-- [x] Configure `/items/box/:boxId` route (ItemsDetailPage)
-- [x] Configure `/items/category/:category` route (ItemsDetailPage)
-- [x] Add auth guard to protected routes
-- [x] Hide bottom nav on auth page
-
-### Base Styling
-
-- [x] Set up color variables in Tailwind config
-- [x] Configure dark theme as default
-- [x] Set up base typography
-- [x] Create 8 preset box gradient classes
-- [x] Create gradient utility classes for UI elements
+- **Fun & Playful**: Every interaction should feel satisfying and game-like
+- **Vibrant**: Bold gradients on cards/elements against clean dark/light backgrounds
+- **Rewarding**: XP system provides constant positive feedback
+- **Familiar**: Tinder-inspired patterns reduce learning curve
 
 ---
 
-## Phase 2: Add Items
+## Phase 1: Foundation & Global Styling
 
-### Image Utilities
+### Color System
 
-- [x] Create `useImageCompression` composable
-- [x] Implement resize to max 1200px dimension
-- [x] Implement JPEG compression at 80% quality
-- [x] Handle EXIF orientation correction
+- [ ] Add gradient CSS custom properties for semantic colors
+  - `--gradient-keep`: green gradient (emerald → light emerald)
+  - `--gradient-discard`: rose gradient (rose → light rose)
+  - `--gradient-accent`: violet gradient
+  - `--gradient-undo`: amber/yellow gradient
+- [ ] Add card overlay gradient for text legibility
+- [ ] Ensure all gradients work on both dark and light backgrounds
+- [ ] Keep backgrounds clean and simple (dark: gray-900, light: gray-50)
 
-### Camera Capture
+### ActionButton Component
 
-- [x] Create camera input component
-- [x] Style large capture button
-- [x] Trigger native camera on mobile
-- [x] Compress image after capture
-- [x] Show capture success feedback
+- [ ] Create `ActionButton.vue` reusable component
+- [ ] Support variants: `keep`, `discard`, `undo`
+- [ ] Support sizes: `sm` (40px), `md` (56px), `lg` (64px)
+- [ ] Circular shape with gradient or solid background
+- [ ] White icon centered inside
+- [ ] Shadow for visual depth
+- [ ] Press animation: `scale(0.9)` on active
+- [ ] Disabled state: 50% opacity, no shadow
 
-### Batch Upload
+### Header Branding
 
-- [x] Create file picker for multiple images
-- [x] Show selected files preview
-- [x] Process uploads sequentially
-- [x] Show upload progress indicator
-- [x] Handle upload errors gracefully
-
-### InstantDB Storage Integration
-
-- [x] Create `useUpload` composable
-- [x] Upload compressed image to InstantDB storage
-- [x] Get file URL after upload
-- [x] Create item record linked to file
-
-### Item Creation
-
-- [x] Create `useItems` composable
-- [x] Implement `createItem` transaction
-- [x] Set default name to "Item" (no numbering)
-- [x] Set status to "unsorted"
-- [x] Set createdAt timestamp
-- [x] Link item to current user
-
-### Add Page UI
-
-- [x] Create `AddPage.vue`
-- [x] Toggle between camera and upload modes
-- [x] Show recently added items count
-- [x] Stay on page after adding (ready for more)
+- [ ] Create playful "SuperSwiper" logo treatment
+- [ ] Consider gradient text or custom styling
+- [ ] Keep compact to accommodate XP counter
+- [ ] Maintain theme toggle and logout functionality
 
 ---
 
-## Phase 3: Swipe Experience
+## Phase 2: XP System
 
-### Swipe Gesture
+### XP Store
 
-- [x] Create `useSwipe` composable
-- [x] Track pointer/touch down position
-- [x] Calculate drag delta on move
-- [x] Apply transform (translate + rotate)
-- [x] Detect left/right threshold (100px)
-- [x] Spring back animation when below threshold
+- [ ] Create `xpStore.ts` for XP state management
+- [ ] Track total XP points
+- [ ] Track XP history (amount, action type, timestamp)
+- [ ] Persist to localStorage with key `superswiper-xp`
+- [ ] Define point values:
+  - Keep: +5 XP
+  - Discard (any category): +5 XP
+  - Undo: 0 XP (no penalty)
 
-### Swipe Card
+### XP Header Display
 
-- [x] Create `SwipeCard.vue` component
-- [x] Display item photo (full bleed)
-- [x] Overlay item name at bottom
-- [x] Gradient overlay for text legibility
-- [x] Connect to swipe gesture composable
+- [ ] Add XP counter to right side of header
+- [ ] Display lightning bolt or star icon
+- [ ] Show current XP total
+- [ ] Style with accent color or gradient text
+- [ ] Use `font-semibold` and `text-sm`
 
-### Swipe Animations
+### XP Popup Feedback
 
-- [x] Fly-off animation (left)
-- [x] Fly-off animation (right)
-- [x] Card enter animation (scale + fade)
-- [x] Next card peek behind current card
+- [ ] Create `XpPopup.vue` component
+- [ ] Trigger after each keep/discard action
+- [ ] Show "+5 XP" text
+- [ ] Float upward ~50px over 600ms
+- [ ] Fade out during animation
+- [ ] Green color for keep, rose for discard
+- [ ] Position above the swiped card
 
-### Action Overlays
+### XP Milestones
 
-- [x] Create `SwipeOverlay.vue` component
-- [x] Show "KEEP" indicator on right drag
-- [x] Show "DISCARD" indicator on left drag
-- [x] Animate opacity based on drag distance
-- [x] Use appropriate colors (green/red)
+- [ ] Trigger confetti at every 100 XP
+- [ ] Consider larger celebration at 500 XP milestones
+
+---
+
+## Phase 3: Swipe Card Redesign
+
+### SwipeCard Layout
+
+- [ ] Photo fills entire card (object-cover)
+- [ ] Rounded corners: `rounded-3xl` (24px)
+- [ ] Bottom gradient overlay (transparent → dark)
+- [ ] Name in bold white at bottom-left
+- [ ] Optional subtitle line below name
+- [ ] Remove category badge from card face
+- [ ] Maintain ~3:4 aspect ratio
+
+### Card Stack Visual
+
+- [ ] More pronounced depth effect for stacked cards
+- [ ] Background cards: scaled down, translated up
+- [ ] Subtle shadow on foreground card
+- [ ] Smooth transitions when advancing cards
+
+### Swipe Feedback
+
+- [ ] Keep existing gesture system
+- [ ] Add subtle rotation based on drag direction
+- [ ] Color tint overlay showing intent:
+  - Green tint when dragging right (keep)
+  - Rose tint when dragging left (discard)
+
+---
+
+## Phase 4: Action Buttons Redesign
+
+### Button Row Layout
+
+- [ ] Three buttons: Undo, Discard, Keep
+- [ ] Centered below card stack
+- [ ] Gap of `gap-6` between buttons
+- [ ] Generous vertical spacing from cards
+
+### Button Specifications
+
+| Button  | Color        | Size | Icon               |
+| ------- | ------------ | ---- | ------------------ |
+| Undo    | Amber/Yellow | 48px | Arrow rotate left  |
+| Discard | Rose/Red     | 64px | X mark             |
+| Keep    | Green        | 64px | Heart or checkmark |
+
+### Button Behavior
+
+- [ ] Undo: Go to previous item (if available)
+- [ ] Discard: Open discard sheet
+- [ ] Keep: Open box picker sheet
+- [ ] Disable Undo when no previous item
+- [ ] Satisfying press feedback on all buttons
+
+---
+
+## Phase 5: Bottom Navigation Redesign
+
+### Navigation Layout
+
+- [ ] Vertical layout: icon above label
+- [ ] Four tabs: Swipe, Add, Items, Stats
+- [ ] Consistent spacing between tabs
+
+### Active State
+
+- [ ] Colored icon (accent color)
+- [ ] Colored label text
+- [ ] Optional underline indicator
+- [ ] Smooth color transition
+
+### Inactive State
+
+- [ ] Muted gray icon
+- [ ] Muted gray label
+- [ ] Subtle tap feedback (scale animation)
+
+### Icons
+
+- [ ] Swipe: Flame or cards icon
+- [ ] Add: Plus or camera icon
+- [ ] Items: Box or grid icon
+- [ ] Stats: Chart or trophy icon
+
+---
+
+## Phase 6: Sheets & Modals
 
 ### Discard Sheet
 
-- [x] Create `DiscardSheet.vue` component
-- [x] Slide-up animation from bottom
-- [x] Backdrop blur effect
-- [x] Three buttons: Trash, Donate, Sell
-- [x] Icon + label for each option
-- [x] Close on selection or tap outside
+- [ ] Keep bottom sheet pattern
+- [ ] Update button styling to match ActionButton
+- [ ] Colorful icons for each option:
+  - Trash: Gray/neutral with bin emoji
+  - Donate: Orange/coral with gift emoji
+  - Sell: Green/teal with money emoji
+- [ ] Larger touch targets (min 56px height)
+- [ ] Rounded button style
 
 ### Box Picker Sheet
 
-- [x] Create `BoxPickerSheet.vue` component
-- [x] 2-column grid of boxes
-- [x] Sort boxes by item count (descending)
-- [x] Show box name and item count
-- [x] Display box's assigned gradient background
-- [x] "Create new box" button at end
-- [x] Close on selection
+- [ ] Keep existing gradient box cards
+- [ ] Increase card size for easier tapping
+- [ ] Add subtle shadow for depth
+- [ ] "Create new box" with dashed border + plus icon
+- [ ] Checkmark indicator on selected box (if applicable)
 
-### Create Box Flow
+### Create Box Modal
 
-- [x] Create `CreateBoxModal.vue` component
-- [x] Text input for box name
-- [x] Create button
-- [x] Create `useBoxes` composable
-- [x] Implement `createBox` transaction
-- [x] Assign random gradient index (0-7) on creation
-- [x] Box created immediately (can exist with 0 items)
-- [x] Auto-select newly created box when in swipe flow
-
-### Sort Transactions
-
-- [x] Implement `discardItem` (update status to trash/donate/sell)
-- [x] Implement `keepItem` (update status to kept, link to box)
-- [x] Set sortedAt timestamp on sort
-- [x] Increment user's itemsSorted counter
-
-### Swipe Page
-
-- [x] Create `SwipePage.vue`
-- [x] Query unsorted items for user
-- [x] Show current item in SwipeCard
-- [x] Handle swipe completion → show appropriate sheet
-- [x] Advance to next item after sort
-- [x] Handle empty state (no unsorted items)
+- [ ] Match new visual language
+- [ ] Rounded input field
+- [ ] Primary button with gradient
+- [ ] Clean, focused layout
 
 ---
 
-## Phase 4: View Items
+## Phase 7: Add Page
 
-### Items Overview Page
+### Layout
 
-- [x] Create `ItemsPage.vue`
-- [x] Header with "Items Sorted" counter
-- [x] Boxes section with 2-column grid
-- [x] Create `BoxCard.vue` component
-- [x] Show box name, item count, assigned gradient bg
-- [x] Query boxes with item counts
-- [x] Discard categories section (full-width)
-- [x] Trash button with count
-- [x] Donate button with count
-- [x] Sell button with count
-- [x] Navigate to detail on tap
+- [ ] Two large action buttons stacked vertically
+- [ ] Camera button with camera icon
+- [ ] Upload button with photo/gallery icon
+- [ ] Instructional text with friendly tone
 
-### Items Detail Page
+### Button Styling
 
-- [x] Create `ItemsDetailPage.vue`
-- [x] Handle both box and category routes
-- [x] Header with back button, name, count
-- [x] Grid of item thumbnails
-- [x] Create `ItemCard.vue` component
-- [x] Show photo thumbnail and name
-- [x] Tap to open item modal
+- [ ] Large, tappable buttons (full width or near full)
+- [ ] Rounded rectangle or circular style
+- [ ] Subtle gradient or accent color
+- [ ] Icon + label format
+
+### Empty/Error States
+
+- [ ] Friendly message when camera not available
+- [ ] Upload progress feedback
+
+---
+
+## Phase 8: Items Page
+
+### Section Headers
+
+- [ ] Playful typography for "Boxes" and "Discarded"
+- [ ] Consistent styling with rest of app
+
+### Box Cards
+
+- [ ] Keep existing gradient system
+- [ ] Ensure vibrant colors
+- [ ] Show box name and item count
+- [ ] Tap to navigate to detail
+
+### Discard Categories
+
+- [ ] Row layout with icon, label, and count
+- [ ] Colored icons matching discard sheet:
+  - Trash: 🗑️
+  - Donate: 🎁
+  - Sell: 💰
+- [ ] Tap to navigate to detail
+
+### Empty States
+
+- [ ] Friendly message when no boxes
+- [ ] "Create your first box" CTA
+
+---
+
+## Phase 9: Items Detail Page
+
+### Header
+
+- [ ] Back button
+- [ ] Box/category name
+- [ ] Item count
+
+### Grid Layout
+
+- [ ] Square thumbnail cards
+- [ ] 2 or 3 column grid
+- [ ] Item name overlay on thumbnail
 
 ### Item Modal
 
-- [x] Create `ItemModal.vue` component
-- [x] Full-size photo display
-- [x] Editable name field
-- [x] Save name on blur/enter
-- [x] "Move to..." button
-- [x] Open destination picker (boxes + discard categories)
-- [x] Allow moving to any box or any discard category
-- [x] Implement `updateItemName` transaction
-- [x] Implement `moveItem` transaction (handles status change)
-- [x] Close modal on backdrop tap
+- [ ] Full-size photo
+- [ ] Editable name field
+- [ ] Move to action with new button styling
+- [ ] Delete option (styled appropriately)
 
 ---
 
-## Phase 5: Gamification
+## Phase 10: Stats Page
 
-### Session Streak
+### XP Display
 
-- [x] Create `useStreak` composable
-- [x] Track items sorted in current session
-- [x] Increment on each sort action
-- [x] Reset on page refresh (ref-based)
-- [x] Expose streak count for display
+- [ ] Prominent XP total at top
+- [ ] Lightning bolt or star icon
+- [ ] Large, eye-catching number
+- [ ] Optional: Level indicator (stretch goal)
 
-### Confetti Celebration
+### Progress Section
 
-- [x] Create `ConfettiExplosion.vue` component
-- [x] Particle animation system
-- [x] Trigger at streak count === 5
-- [x] Use vibrant colors matching theme
-- [x] ~2 second duration
-- [x] Clean up particles after animation
+- [ ] Progress bar with gradient fill
+- [ ] Percentage and counts displayed
+- [ ] "X of Y items sorted" text
 
-### Stats Display
+### Category Breakdown
 
-- [x] Show session streak on swipe page
-- [x] Show all-time sorted count on items page
-- [x] Subtle animation on counter increment
+- [ ] Visual breakdown by category
+- [ ] Colored indicators matching category colors:
+  - Kept: Green
+  - Trash: Gray
+  - Donate: Orange
+  - Sell: Teal
+- [ ] Item counts per category
 
 ### Empty State
 
-- [x] Create `EmptyState.vue` component
-- [x] Celebratory message when all sorted
-- [x] "Add more items" CTA button
-- [x] Playful illustration or animation
+- [ ] Friendly message when no items
+- [ ] "Start sorting!" CTA
 
 ---
 
-## Phase 6: Polish
+## Phase 11: Auth Page
+
+### Branding
+
+- [ ] Playful SuperSwiper header/logo
+- [ ] Welcoming layout
+
+### Form Styling
+
+- [ ] Rounded input fields
+- [ ] Primary button with gradient or accent
+- [ ] Friendly, encouraging copy
+- [ ] Clear error messages
+
+### Guest Mode
+
+- [ ] "Continue as Guest" option
+- [ ] Clear distinction from email auth
+
+---
+
+## Phase 12: Polish & Animation
+
+### Micro-interactions
+
+- [ ] Button press: `scale(0.9)` with 100ms transition
+- [ ] Tab switch: smooth color transition
+- [ ] Card swipe: rotation based on drag direction
+- [ ] Counter increment: subtle bounce animation
+
+### Page Transitions
+
+- [ ] Fade + translateY animation
+- [ ] Duration: 200-250ms
+- [ ] Easing: ease-out
+- [ ] Smooth and non-jarring
 
 ### Loading States
 
-- [x] Auth page loading during magic code send
-- [x] Upload progress indicator
-- [x] Swipe page skeleton while loading items
-- [x] Items page skeleton while loading
+- [ ] Skeleton loaders match final layout
+- [ ] Pulse animation on skeletons
+- [ ] Spinner for action buttons when processing
 
-### Error Handling
+### Celebrations
 
-- [x] Auth error messages
-- [x] Upload failure handling with retry
-- [x] Network error toast notifications
-- [x] Graceful degradation for failed image loads
-
-### Animation Refinements
-
-- [x] Button press feedback (scale)
-- [x] Page transition animations
-- [x] Sheet open/close smoothness
-- [x] Card stack visual depth
-
-### Edge Cases
-
-- [x] Handle very long item/box names
-- [x] Handle missing/broken images
-- [x] Handle rapid successive swipes
-- [x] Handle offline state (InstantDB handles this)
+- [ ] Keep existing confetti for milestones
+- [ ] Add XP milestone confetti (every 100 XP)
+- [ ] Satisfying feedback loop
 
 ---
 
-## Future (Post-MVP)
+## Implementation Order
 
-### AI Features
+### Sprint 1: Foundation
 
-- [-] AI item naming via Vision API
-- [-] AI box image generation
-- [-] Cloudflare Worker for AI endpoints
+1. [ ] Update color system in `main.css`
+2. [ ] Create `ActionButton.vue` component
+3. [ ] Create `xpStore.ts`
 
-### Additional Features
+### Sprint 2: Swipe Experience
 
-- [x] Undo recent sort action
-- [x] Share donate/sell lists
-- [x] Push notification reminders
-- [x] Detailed statistics page
-- [x] Achievement badges
-- [x] Sound effects
-- [x] Light mode option
+4. [ ] Redesign `SwipeCard.vue`
+5. [ ] Update `SwipePage.vue` with new action buttons
+6. [ ] Add XP display to header in `AppShell.vue`
+7. [ ] Create `XpPopup.vue` and integrate
+
+### Sprint 3: Navigation & Sheets
+
+8. [ ] Redesign `BottomNav.vue`
+9. [ ] Update `DiscardSheet.vue`
+10. [ ] Update `BoxPickerSheet.vue`
+
+### Sprint 4: Other Pages
+
+11. [ ] Update `AddPage.vue`
+12. [ ] Update `ItemsPage.vue`
+13. [ ] Update `StatsPage.vue`
+14. [ ] Update `AuthPage.vue`
+
+### Sprint 5: Polish
+
+15. [ ] Refine animations and transitions
+16. [ ] Test dark/light mode consistency
+17. [ ] Accessibility review
+18. [ ] Performance check
 
 ---
 
-## Technical Debt & Maintenance
+## File Summary
 
-- [x] Add unit tests for composables
-- [x] Add component tests for critical flows
-- [x] Set up error monitoring (Sentry or similar)
-- [x] Performance audit (bundle size, render performance)
-- [x] Accessibility audit (screen reader, keyboard nav)
+### New Files
+
+| File                              | Purpose                               |
+| --------------------------------- | ------------------------------------- |
+| `src/components/ActionButton.vue` | Reusable Tinder-style circular button |
+| `src/components/XpPopup.vue`      | Floating +XP animation component      |
+| `src/stores/xpStore.ts`           | XP state management                   |
+
+### Modified Files (High Impact)
+
+| File                           | Changes                                |
+| ------------------------------ | -------------------------------------- |
+| `src/assets/main.css`          | Color system, gradients, new utilities |
+| `src/components/SwipeCard.vue` | Complete card layout redesign          |
+| `src/pages/SwipePage.vue`      | Action buttons, layout, XP integration |
+| `src/components/BottomNav.vue` | Tinder-style navigation                |
+| `src/components/AppShell.vue`  | Header branding, XP display            |
+
+### Modified Files (Medium Impact)
+
+| File                                | Changes                    |
+| ----------------------------------- | -------------------------- |
+| `src/components/DiscardSheet.vue`   | Button styling updates     |
+| `src/components/BoxPickerSheet.vue` | Card styling updates       |
+| `src/components/BoxCard.vue`        | Enhanced gradients         |
+| `src/pages/AddPage.vue`             | Button redesign            |
+| `src/pages/ItemsPage.vue`           | Visual updates             |
+| `src/pages/StatsPage.vue`           | XP display, visual updates |
+| `src/pages/AuthPage.vue`            | Branding, styling          |
+
+---
+
+## Success Criteria
+
+- [ ] Swipe experience feels fun and satisfying
+- [ ] Action buttons are prominent and easy to tap
+- [ ] XP counter is visible and updates on actions
+- [ ] +XP popup appears after each action
+- [ ] Colors are vibrant on both dark and light backgrounds
+- [ ] Navigation is clear and intuitive
+- [ ] All existing functionality still works
+- [ ] Performance remains smooth (60fps animations)
+- [ ] Accessibility is maintained (focus states, screen reader support)
+- [ ] Dark and light modes both look polished
+
+---
+
+## Technical Notes
+
+### Gradient Implementation
+
+Use CSS custom properties for gradients to enable easy theming:
+
+```css
+--gradient-keep: linear-gradient(135deg, #10b981, #34d399);
+--gradient-discard: linear-gradient(135deg, #f43f5e, #fb7185);
+```
+
+### XP Persistence
+
+Store XP in localStorage to persist across sessions:
+
+```typescript
+const XP_STORAGE_KEY = 'superswiper-xp'
+```
+
+### Animation Performance
+
+Use `transform` and `opacity` for animations to ensure GPU acceleration:
+
+```css
+.action-button:active {
+  transform: scale(0.9);
+  transition: transform 0.1s ease-out;
+}
+```
+
+### Component Composition
+
+The ActionButton should be flexible enough for use in:
+
+- Swipe page action row
+- Discard sheet options
+- Any future action contexts
