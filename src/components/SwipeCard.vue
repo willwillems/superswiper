@@ -144,7 +144,8 @@ const showDiscard = computed(() => direction.value === 'left')
       v-if="imageUrl && state !== 'error'"
       :src="imageUrl"
       :alt="name"
-      class="absolute inset-0 h-full w-full object-cover"
+      draggable="false"
+      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
       @load="handleImageLoad"
       @error="handleImageError"
     />
