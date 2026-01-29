@@ -17,20 +17,25 @@ useTheme()
 </template>
 
 <style scoped>
-.page-enter-active,
+.page-enter-active {
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .page-leave-active {
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+    opacity 0.15s ease-in,
+    transform 0.2s ease-in;
 }
 
 .page-enter-from {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(12px) scale(0.98);
 }
 
 .page-leave-to {
   opacity: 0;
-  transform: translateY(-8px);
+  transform: translateY(-8px) scale(0.98);
 }
 </style>

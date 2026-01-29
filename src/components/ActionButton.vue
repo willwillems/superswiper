@@ -46,11 +46,13 @@ function handleClick() {
 <template>
   <button
     type="button"
-    class="flex items-center justify-center rounded-full text-white shadow-lg transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+    class="flex items-center justify-center rounded-full text-white shadow-lg transition-all duration-150 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     :class="[
       sizeClasses[size],
       variantStyles[variant],
-      disabled ? 'cursor-not-allowed opacity-50 shadow-none' : 'active:scale-90',
+      disabled
+        ? 'cursor-not-allowed opacity-50 shadow-none'
+        : 'hover:scale-105 hover:shadow-xl active:scale-95 active:shadow-md',
       variant === 'keep' && 'focus-visible:ring-keep',
       variant === 'discard' && 'focus-visible:ring-discard',
       variant === 'undo' && 'focus-visible:ring-undo',

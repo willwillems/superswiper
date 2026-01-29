@@ -22,15 +22,18 @@ const { imageUrl, state, handleImageLoad, handleImageError } = useImageLoader(pr
 const DISTANCE_THRESHOLD = 100
 const VELOCITY_THRESHOLD = 0.5
 const MAX_ROTATION = 15
-const FLY_OFF_DURATION = 300
+const FLY_OFF_ROTATION = 30
+const FLY_OFF_DURATION = 350
 
 const deltaX = ref(0)
 const deltaY = ref(0)
 const isDragging = ref(false)
 const isFlyingOff = ref(false)
+const flyOffDirection = ref<'left' | 'right' | null>(null)
 
 function flyOff(direction: 'left' | 'right') {
   isFlyingOff.value = true
+  flyOffDirection.value = direction
   const flyDistance = window.innerWidth + 200
   deltaX.value = direction === 'right' ? flyDistance : -flyDistance
 
@@ -104,6 +107,10 @@ const direction = computed<SwipeDirection>(() => {
 const progress = computed(() => Math.min(1, Math.abs(deltaX.value) / DISTANCE_THRESHOLD))
 
 const rotation = computed(() => {
+  if (isFlyingOff.value) {
+    const maxRotation = flyOffDirection.value === 'right' ? FLY_OFF_ROTATION : -FLY_OFF_ROTATION
+    return maxRotation
+  }
   const rotationAmount = (deltaX.value / DISTANCE_THRESHOLD) * MAX_ROTATION
   return Math.max(-MAX_ROTATION, Math.min(MAX_ROTATION, rotationAmount))
 })
@@ -113,8 +120,8 @@ const cardStyle = computed(() => ({
   transition: isDragging.value
     ? 'none'
     : isFlyingOff.value
-      ? `transform ${FLY_OFF_DURATION}ms ease-out`
-      : 'transform 0.3s ease-out',
+      ? `transform ${FLY_OFF_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
+      : 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
 }))
 
 const overlayStyle = computed(() => {
