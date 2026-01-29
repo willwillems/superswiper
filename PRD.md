@@ -309,7 +309,7 @@
 - [x] Undo recent sort action
 - [x] Share donate/sell lists
 - [ ] Push notification reminders
-- [ ] Detailed statistics page
+- [x] Detailed statistics page
 - [ ] Achievement badges
 - [ ] Sound effects
 - [x] Light mode option

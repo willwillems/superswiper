@@ -9,6 +9,7 @@ const tabs = [
   { name: 'swipe', label: 'Swipe', icon: '↔', description: 'Swipe through items to sort them' },
   { name: 'add', label: 'Add', icon: '+', description: 'Add new items to sort' },
   { name: 'items', label: 'Items', icon: '☐', description: 'View all sorted items' },
+  { name: 'stats', label: 'Stats', icon: '◔', description: 'View your decluttering statistics' },
 ] as const
 
 const activeTab = computed(() => {
