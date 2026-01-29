@@ -12,7 +12,7 @@ const { imageUrl, state, handleImageLoad, handleImageError } = useImageLoader(pr
 
 const scale = 1 - props.stackIndex * 0.04
 const translateY = props.stackIndex * 8
-const brightness = 1 - props.stackIndex * 0.1
+const cardOpacity = 1 - props.stackIndex * 0.15
 </script>
 
 <template>
@@ -22,14 +22,15 @@ const brightness = 1 - props.stackIndex * 0.1
     :style="{
       transform: `scale(${scale}) translateY(${translateY}px)`,
       zIndex: -stackIndex,
-      filter: `brightness(${brightness})`,
-      transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease-out',
+      opacity: cardOpacity,
+      transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out',
     }"
   >
     <img
       v-if="imageUrl && state !== 'error'"
       :src="imageUrl"
       alt=""
+      loading="lazy"
       class="h-full w-full object-cover opacity-80"
       @load="handleImageLoad"
       @error="handleImageError"

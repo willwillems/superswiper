@@ -258,6 +258,7 @@ async function handleUndo() {
         <SwipeCardBackground
           v-for="(item, index) in backgroundCards.slice().reverse()"
           :key="item.id"
+          v-memo="[item.id, item.photoPath]"
           :photo-path="item.photoPath"
           :stack-index="backgroundCards.length - index"
         />
