@@ -137,7 +137,7 @@ const showDiscard = computed(() => direction.value === 'left')
     role="region"
     :aria-label="`Item card for ${name}. Swipe left to discard, swipe right to keep. Use arrow keys or A/D keys as keyboard shortcuts.`"
     tabindex="0"
-    class="relative aspect-[3/4] w-full max-w-sm cursor-grab overflow-hidden rounded-2xl bg-surface shadow-xl select-none touch-none focus:outline-none focus-visible:ring-4 focus-visible:ring-accent active:cursor-grabbing"
+    class="relative aspect-[3/4] w-full max-w-sm cursor-grab overflow-hidden rounded-3xl bg-surface shadow-xl select-none touch-none focus:outline-none focus-visible:ring-4 focus-visible:ring-accent active:cursor-grabbing"
     :style="cardStyle"
   >
     <img

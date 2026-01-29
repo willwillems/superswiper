@@ -369,10 +369,10 @@ Transform SuperSwiper from a functional decluttering tool into a **fun, playful,
 
 ### Sprint 2: Swipe Experience
 
-4. [ ] Redesign `SwipeCard.vue`
-5. [ ] Update `SwipePage.vue` with new action buttons
-6. [ ] Add XP display to header in `AppShell.vue`
-7. [ ] Create `XpPopup.vue` and integrate
+4. [x] Redesign `SwipeCard.vue`
+5. [x] Update `SwipePage.vue` with new action buttons
+6. [x] Add XP display to header in `AppShell.vue`
+7. [x] Create `XpPopup.vue` and integrate
 
 ### Sprint 3: Navigation & Sheets
 

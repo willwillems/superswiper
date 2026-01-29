@@ -8,13 +8,16 @@ import { useToast } from '@/composables/useToast'
 import { useUndoHistory } from '@/composables/useUndoHistory'
 import { useSound } from '@/composables/useSound'
 import { useAchievements } from '@/composables/useAchievements'
+import { useXpStore } from '@/stores/xpStore'
 import SwipeCard from '@/components/SwipeCard.vue'
+import ActionButton from '@/components/ActionButton.vue'
 import SwipeCardBackground from '@/components/SwipeCardBackground.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
 import BoxPickerSheet from '@/components/BoxPickerSheet.vue'
 import CreateBoxModal from '@/components/CreateBoxModal.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
+import XpPopup from '@/components/XpPopup.vue'
 
 const ConfettiExplosion = defineAsyncComponent(() => import('@/components/ConfettiExplosion.vue'))
 
@@ -25,6 +28,7 @@ const { sessionStreak, shouldTriggerConfetti, incrementStreak, setStreak, clearC
 const toast = useToast()
 const { canUndo, recordSort, popUndo } = useUndoHistory()
 const { playDiscardSound, playKeepSound, playCelebrationSound, playUndoSound } = useSound()
+const { addXp, lastEarnedXp, clearLastEarnedXp } = useXpStore()
 
 // Initialize achievements watcher to trigger unlocks on sort
 useAchievements()
@@ -88,6 +92,7 @@ async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
     })
     await discardItem(pendingItemId.value, status)
     playDiscardSound()
+    addXp('discard')
     incrementStreak()
     advanceToNext()
   } catch (err) {
@@ -116,6 +121,7 @@ async function handleBoxSelect(boxId: string) {
     })
     await keepItem(pendingItemId.value, boxId)
     playKeepSound()
+    addXp('keep')
     incrementStreak()
     advanceToNext()
   } catch (err) {
@@ -149,6 +155,7 @@ async function handleCreateBox(name: string) {
       })
       await keepItem(pendingItemId.value, boxId)
       playKeepSound()
+      addXp('keep')
       incrementStreak()
       advanceToNext()
     }
@@ -217,29 +224,16 @@ async function handleUndo() {
 
 <template>
   <div class="flex flex-1 flex-col items-center justify-center gap-6 p-6">
-    <div class="flex items-center gap-4">
-      <Transition name="fade">
-        <button
-          v-if="canUndo"
-          class="flex items-center gap-1.5 rounded-full bg-surface px-3 py-1.5 text-sm text-text-muted transition-colors hover:bg-surface/80 active:scale-95"
-          :disabled="isProcessing"
-          @click="handleUndo"
-        >
-          <span class="text-base">↩</span>
-          <span>Undo</span>
-        </button>
-      </Transition>
-      <Transition name="fade">
-        <div v-if="sessionStreak > 0" class="flex items-center gap-2">
-          <span class="text-2xl">🔥</span>
-          <span class="text-lg font-semibold text-keep">{{ sessionStreak }} sorted</span>
-        </div>
-      </Transition>
-    </div>
+    <Transition name="fade">
+      <div v-if="sessionStreak > 0" class="flex items-center gap-2">
+        <span class="text-2xl">🔥</span>
+        <span class="text-lg font-semibold text-keep">{{ sessionStreak }} sorted</span>
+      </div>
+    </Transition>
 
     <div v-if="isLoading" class="flex w-full max-w-sm flex-col items-center gap-4">
-      <div class="relative aspect-[3/4] w-full overflow-hidden rounded-2xl bg-surface">
-        <SkeletonLoader width="100%" height="100%" rounded="2xl" />
+      <div class="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-surface">
+        <SkeletonLoader width="100%" height="100%" rounded="3xl" />
         <div class="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-4">
           <SkeletonLoader width="60%" height="1.5rem" rounded="lg" />
           <SkeletonLoader width="40%" height="1rem" rounded="lg" />
@@ -254,6 +248,12 @@ async function handleUndo() {
 
     <div v-else-if="currentItem" class="flex w-full flex-col items-center gap-4">
       <div class="relative w-full max-w-sm">
+        <XpPopup
+          :amount="lastEarnedXp?.amount ?? null"
+          :action="lastEarnedXp?.action ?? null"
+          @complete="clearLastEarnedXp"
+        />
+
         <!-- Background cards for stack visual depth (rendered back-to-front) -->
         <SwipeCardBackground
           v-for="(item, index) in backgroundCards.slice().reverse()"
@@ -272,16 +272,28 @@ async function handleUndo() {
         />
       </div>
 
-      <div class="flex items-center gap-4 text-text-muted">
-        <span class="flex items-center gap-1">
-          <span>←</span>
-          <span class="text-sm">Discard</span>
-        </span>
-        <span class="text-xs">|</span>
-        <span class="flex items-center gap-1">
-          <span class="text-sm">Keep</span>
-          <span>→</span>
-        </span>
+      <div class="flex items-center justify-center gap-6 pt-4">
+        <ActionButton
+          variant="undo"
+          size="sm"
+          :ariaLabel="'Undo last action'"
+          :disabled="!canUndo || isProcessing"
+          @click="handleUndo"
+        />
+        <ActionButton
+          variant="discard"
+          size="lg"
+          :ariaLabel="'Discard this item'"
+          :disabled="isProcessing"
+          @click="handleSwipeLeft"
+        />
+        <ActionButton
+          variant="keep"
+          size="lg"
+          :ariaLabel="'Keep this item'"
+          :disabled="isProcessing"
+          @click="handleSwipeRight"
+        />
       </div>
     </div>
 

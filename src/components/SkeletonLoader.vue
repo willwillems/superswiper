@@ -2,7 +2,7 @@
 defineProps<{
   width?: string
   height?: string
-  rounded?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
+  rounded?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full'
 }>()
 </script>
 
@@ -15,6 +15,7 @@ defineProps<{
       rounded === 'lg' && 'rounded-lg',
       rounded === 'xl' && 'rounded-xl',
       rounded === '2xl' && 'rounded-2xl',
+      rounded === '3xl' && 'rounded-3xl',
       rounded === 'full' && 'rounded-full',
       !rounded && 'rounded-xl',
     ]"
