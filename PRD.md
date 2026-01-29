@@ -311,7 +311,7 @@
 - [ ] Push notification reminders
 - [x] Detailed statistics page
 - [ ] Achievement badges
-- [ ] Sound effects
+- [x] Sound effects
 - [x] Light mode option
 
 ---

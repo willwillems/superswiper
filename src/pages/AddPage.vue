@@ -3,6 +3,7 @@ import { ref, watch, computed } from 'vue'
 import { useUpload, type UploadItem } from '@/composables/useUpload'
 import { useItems } from '@/composables/useItems'
 import { useToast } from '@/composables/useToast'
+import { useSound } from '@/composables/useSound'
 import UploadProgress from '@/components/UploadProgress.vue'
 
 type Mode = 'camera' | 'upload'
@@ -20,6 +21,7 @@ const {
 } = useUpload()
 const { createItem } = useItems()
 const toast = useToast()
+const { playUploadSound } = useSound()
 
 watch(uploadError, (err) => {
   if (err) {
@@ -45,6 +47,7 @@ async function handleCapture(event: Event) {
   try {
     const path = await uploadImage(file)
     await createItem(path)
+    playUploadSound()
     itemsAdded.value++
   } finally {
     isProcessing.value = false
@@ -60,6 +63,7 @@ async function processUploadQueue(items: UploadItem[]) {
     try {
       const fileId = await processQueueItem(item)
       await createItem(fileId)
+      playUploadSound()
       itemsAdded.value++
     } catch {
       // Error is already captured in the queue item

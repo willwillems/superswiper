@@ -5,6 +5,7 @@ import { useAuth } from '@/composables/useAuth'
 import BottomNav from '@/components/BottomNav.vue'
 import ToastContainer from '@/components/ToastContainer.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
+import SoundToggle from '@/components/SoundToggle.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,6 +36,7 @@ async function handleLogout() {
     >
       <h1 class="py-3 text-lg font-bold">SuperSwiper</h1>
       <div class="flex items-center gap-1">
+        <SoundToggle />
         <ThemeToggle />
         <button
           class="rounded-lg px-3 py-2 text-sm text-text-muted transition-colors hover:bg-surface hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"

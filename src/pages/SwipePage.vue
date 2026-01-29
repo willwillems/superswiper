@@ -6,6 +6,7 @@ import { useBoxes } from '@/composables/useBoxes'
 import { useStreak } from '@/composables/useStreak'
 import { useToast } from '@/composables/useToast'
 import { useUndoHistory } from '@/composables/useUndoHistory'
+import { useSound } from '@/composables/useSound'
 import SwipeCard from '@/components/SwipeCard.vue'
 import SwipeCardBackground from '@/components/SwipeCardBackground.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
@@ -22,6 +23,7 @@ const { createBox, error: boxesError } = useBoxes()
 const { sessionStreak, shouldTriggerConfetti, incrementStreak, setStreak, clearConfettiTrigger } = useStreak()
 const toast = useToast()
 const { canUndo, recordSort, popUndo } = useUndoHistory()
+const { playDiscardSound, playKeepSound, playCelebrationSound, playUndoSound } = useSound()
 
 watch(itemsError, (err) => {
   if (err?.message) toast.error(err.message)
@@ -29,6 +31,10 @@ watch(itemsError, (err) => {
 
 watch(boxesError, (err) => {
   if (err?.message) toast.error(err.message)
+})
+
+watch(shouldTriggerConfetti, (trigger) => {
+  if (trigger) playCelebrationSound()
 })
 
 const currentIndex = ref(0)
@@ -77,6 +83,7 @@ async function handleDiscardSelect(status: 'trash' | 'donate' | 'sell') {
       streakBefore: sessionStreak.value,
     })
     await discardItem(pendingItemId.value, status)
+    playDiscardSound()
     incrementStreak()
     advanceToNext()
   } catch {
@@ -104,6 +111,7 @@ async function handleBoxSelect(boxId: string) {
       streakBefore: sessionStreak.value,
     })
     await keepItem(pendingItemId.value, boxId)
+    playKeepSound()
     incrementStreak()
     advanceToNext()
   } catch {
@@ -136,6 +144,7 @@ async function handleCreateBox(name: string) {
         streakBefore: sessionStreak.value,
       })
       await keepItem(pendingItemId.value, boxId)
+      playKeepSound()
       incrementStreak()
       advanceToNext()
     }
@@ -190,6 +199,7 @@ async function handleUndo() {
 
   try {
     await undoSort(action.itemId)
+    playUndoSound()
     setStreak(action.streakBefore)
     toast.success(`Undid "${action.itemName}"`)
   } catch {
