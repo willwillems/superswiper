@@ -70,18 +70,20 @@ function closeShareSheet() {
     <header class="flex items-center gap-3">
       <button
         class="flex h-10 w-10 items-center justify-center rounded-full bg-surface transition-transform active:scale-95"
+        aria-label="Go back"
         @click="router.back()"
       >
-        ←
+        <span aria-hidden="true">←</span>
       </button>
       <h1 class="flex-1 text-xl font-bold">{{ title }}</h1>
       <span class="text-text-muted">{{ displayItems.length }} items</span>
       <button
         v-if="isShareableCategory && displayItems.length > 0"
         class="flex h-10 w-10 items-center justify-center rounded-full bg-surface transition-transform active:scale-95"
+        aria-label="Share items"
         @click="openShareSheet"
       >
-        📤
+        <span aria-hidden="true">📤</span>
       </button>
     </header>
 

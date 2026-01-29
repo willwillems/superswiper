@@ -54,6 +54,7 @@ function truncateFilename(name: string, maxLength = 20): string {
       <div v-if="onClear" class="flex gap-2">
         <button
           class="text-xs text-text-muted transition-colors hover:text-text-primary"
+          aria-label="Clear upload list"
           @click="onClear"
         >
           Clear
@@ -71,16 +72,19 @@ function truncateFilename(name: string, maxLength = 20): string {
           <div
             class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm"
             :class="getStatusClasses(item.status)"
+            role="status"
+            :aria-label="getStatusLabel(item.status)"
           >
-            <span v-if="item.status === 'pending'" class="text-xs">⏳</span>
+            <span v-if="item.status === 'pending'" class="text-xs" aria-hidden="true">⏳</span>
             <span
               v-else-if="item.status === 'compressing' || item.status === 'uploading'"
               class="animate-spin text-xs"
+              aria-hidden="true"
             >
               ⟳
             </span>
-            <span v-else-if="item.status === 'success'" class="text-xs">✓</span>
-            <span v-else-if="item.status === 'failed'" class="text-xs">✕</span>
+            <span v-else-if="item.status === 'success'" class="text-xs" aria-hidden="true">✓</span>
+            <span v-else-if="item.status === 'failed'" class="text-xs" aria-hidden="true">✕</span>
           </div>
 
           <div class="flex min-w-0 flex-1 flex-col">
@@ -99,9 +103,10 @@ function truncateFilename(name: string, maxLength = 20): string {
     <button
       v-if="items.some((item) => item.status === 'failed') && onRetry"
       class="flex items-center justify-center gap-2 rounded-xl bg-discard/20 py-2 text-sm font-medium text-discard transition-all active:scale-95"
+      aria-label="Retry failed uploads"
       @click="onRetry"
     >
-      <span>⟳</span>
+      <span aria-hidden="true">⟳</span>
       Retry Failed
     </button>
   </div>

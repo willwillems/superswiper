@@ -13,7 +13,7 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col items-center gap-6 text-center">
-    <div v-if="icon" class="text-6xl">{{ icon }}</div>
+    <div v-if="icon" class="text-6xl" aria-hidden="true">{{ icon }}</div>
     <div>
       <h2 class="text-xl font-semibold">{{ title }}</h2>
       <p v-if="description" class="mt-1 text-text-muted">{{ description }}</p>

@@ -18,6 +18,7 @@ const brightness = 1 - props.stackIndex * 0.1
 <template>
   <div
     class="absolute inset-0 aspect-[3/4] overflow-hidden rounded-3xl bg-surface shadow-lg"
+    aria-hidden="true"
     :style="{
       transform: `scale(${scale}) translateY(${translateY}px)`,
       zIndex: -stackIndex,
