@@ -22,6 +22,8 @@ useEscapeKey(isOpen, () => emit('close'))
 
 const { sortedBoxes, isLoading } = useBoxes()
 
+const boxIcons = ['📦', '🏠', '🛋️', '🍳', '🛏️', '🚗', '📚', '🎮'] as const
+
 function handleSelect(boxId: string) {
   emit('select', boxId)
   emit('close')
@@ -35,8 +37,22 @@ function handleBackdropClick() {
   emit('close')
 }
 
-function getGradientClass(gradient: number): string {
-  return `box-gradient-${gradient}`
+function getGradientStyle(gradient: number): string {
+  const gradients = [
+    'linear-gradient(135deg, #f97316, #fb923c)',
+    'linear-gradient(135deg, #ec4899, #f472b6)',
+    'linear-gradient(135deg, #8b5cf6, #a78bfa)',
+    'linear-gradient(135deg, #3b82f6, #60a5fa)',
+    'linear-gradient(135deg, #06b6d4, #22d3ee)',
+    'linear-gradient(135deg, #10b981, #34d399)',
+    'linear-gradient(135deg, #eab308, #facc15)',
+    'linear-gradient(135deg, #ef4444, #f87171)',
+  ] as const
+  return gradients[gradient % gradients.length] ?? gradients[0]
+}
+
+function getBoxIcon(gradient: number): string {
+  return boxIcons[gradient % boxIcons.length] ?? boxIcons[0]
 }
 </script>
 
@@ -69,30 +85,44 @@ function getGradientClass(gradient: number): string {
           <span class="animate-pulse text-text-muted">Loading boxes...</span>
         </div>
 
-        <div v-else class="grid grid-cols-2 gap-3" role="group" aria-label="Available boxes">
+        <div v-else class="flex flex-col gap-3" role="group" aria-label="Available boxes">
           <button
             v-for="box in sortedBoxes"
             :key="box.id"
             :aria-label="`${box.name}, ${box.items?.length ?? 0} items`"
-            :class="[
-              'flex h-24 flex-col items-center justify-center rounded-xl text-white transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.98]',
-              getGradientClass(box.gradient),
-            ]"
+            class="box-option group flex min-h-14 items-center gap-4 rounded-2xl bg-background px-4 py-3 text-left transition-all duration-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.97]"
             @click="handleSelect(box.id)"
           >
-            <span class="font-semibold">{{ box.name }}</span>
-            <span class="text-sm text-white/70">
-              {{ box.items?.length ?? 0 }} items
+            <span
+              class="flex size-11 shrink-0 items-center justify-center rounded-full text-2xl shadow-md transition-transform duration-100 group-active:scale-90"
+              :style="{ background: getGradientStyle(box.gradient) }"
+              aria-hidden="true"
+            >
+              {{ getBoxIcon(box.gradient) }}
+            </span>
+            <span class="flex flex-col">
+              <span class="text-lg font-semibold">{{ box.name }}</span>
+              <span class="text-sm text-text-muted">
+                {{ box.items?.length ?? 0 }} {{ (box.items?.length ?? 0) === 1 ? 'item' : 'items' }}
+              </span>
             </span>
           </button>
 
           <button
             aria-label="Create a new box"
-            class="flex h-24 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-text-muted/30 text-text-muted transition-all hover:border-accent hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-95"
+            class="group flex min-h-14 items-center gap-4 rounded-2xl border-2 border-dashed border-text-muted/30 px-4 py-3 text-left transition-all duration-100 hover:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-[0.97]"
             @click="handleCreateNew"
           >
-            <span class="text-2xl" aria-hidden="true">+</span>
-            <span class="text-sm font-medium">New Box</span>
+            <span
+              class="flex size-11 shrink-0 items-center justify-center rounded-full bg-accent/20 text-2xl transition-transform duration-100 group-active:scale-90 group-hover:bg-accent/30"
+              aria-hidden="true"
+            >
+              ➕
+            </span>
+            <span class="flex flex-col">
+              <span class="text-lg font-semibold text-text-muted group-hover:text-accent">New Box</span>
+              <span class="text-sm text-text-muted">Create a new location</span>
+            </span>
           </button>
         </div>
       </div>
