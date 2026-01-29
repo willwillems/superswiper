@@ -145,8 +145,8 @@ describe('SwipeCard', () => {
     })
     await nextTick()
 
-    // Wait for fly-off animation (300ms)
-    vi.advanceTimersByTime(300)
+    // Wait for fly-off animation (350ms as defined in FLY_OFF_DURATION)
+    vi.advanceTimersByTime(350)
     await nextTick()
 
     expect(wrapper.emitted('swipeRight')).toHaveLength(1)
@@ -170,7 +170,7 @@ describe('SwipeCard', () => {
     })
     await nextTick()
 
-    vi.advanceTimersByTime(300)
+    vi.advanceTimersByTime(350)
     await nextTick()
 
     expect(wrapper.emitted('swipeLeft')).toHaveLength(1)
@@ -214,7 +214,7 @@ describe('SwipeCard', () => {
     })
     await nextTick()
 
-    vi.advanceTimersByTime(300)
+    vi.advanceTimersByTime(350)
     await nextTick()
 
     expect(wrapper.emitted('swipeRight')).toHaveLength(1)
@@ -238,7 +238,7 @@ describe('SwipeCard', () => {
     })
     await nextTick()
 
-    vi.advanceTimersByTime(300)
+    vi.advanceTimersByTime(350)
     await nextTick()
 
     expect(wrapper.emitted('swipeLeft')).toHaveLength(1)
@@ -261,7 +261,7 @@ describe('SwipeCard', () => {
     })
     await nextTick()
 
-    const card = wrapper.find('[class*="rounded-2xl"]')
+    const card = wrapper.find('[class*="rounded-3xl"]')
     expect(card.attributes('style')).toContain('rotate')
   })
 })

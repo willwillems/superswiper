@@ -57,7 +57,7 @@ describe('BoxPickerSheet', () => {
       props: { open: true },
     })
     expect(document.body.textContent).toContain('2 items')
-    expect(document.body.textContent).toContain('1 items')
+    expect(document.body.textContent).toContain('1 item')
     expect(document.body.textContent).toContain('0 items')
   })
 
@@ -135,13 +135,14 @@ describe('BoxPickerSheet', () => {
     expect(wrapper.emitted('close')).toHaveLength(1)
   })
 
-  it('applies gradient class to box buttons', () => {
+  it('applies gradient style to box icons', () => {
     mount(BoxPickerSheet, {
       props: { open: true },
     })
 
     const buttons = document.body.querySelectorAll('button')
     const kitchenButton = Array.from(buttons).find((b) => b.textContent?.includes('Kitchen'))
-    expect(kitchenButton?.classList.contains('box-gradient-0')).toBe(true)
+    const iconSpan = kitchenButton?.querySelector('span[style]')
+    expect(iconSpan?.getAttribute('style')).toContain('linear-gradient')
   })
 })
