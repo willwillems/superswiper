@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, defineAsyncComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import { useItems } from '@/composables/useItems'
 import { useBoxes } from '@/composables/useBoxes'
@@ -11,9 +11,10 @@ import SwipeCardBackground from '@/components/SwipeCardBackground.vue'
 import DiscardSheet from '@/components/DiscardSheet.vue'
 import BoxPickerSheet from '@/components/BoxPickerSheet.vue'
 import CreateBoxModal from '@/components/CreateBoxModal.vue'
-import ConfettiExplosion from '@/components/ConfettiExplosion.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import SkeletonLoader from '@/components/SkeletonLoader.vue'
+
+const ConfettiExplosion = defineAsyncComponent(() => import('@/components/ConfettiExplosion.vue'))
 
 const router = useRouter()
 const { unsortedItems, isLoading, error: itemsError, discardItem, keepItem, undoSort } = useItems()
